@@ -10,16 +10,19 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-type Api struct {
+type Server struct {
 	dbConn *pgx.Conn
-	logger *slog.Logger
 	mux    *http.ServeMux
-	host   string
-	port   uint16
+	logger *slog.Logger
 }
 
-func (api *Api) run() error {
-	addr := fmt.Sprintf("%s:%d", api.host, api.port)
+type User struct {
+	Uuid  string
+	Email string `json:"email"`
+	Name  string `json:"name"`
+}
+
+func (api *Server) run(addr string) error {
 	err := http.ListenAndServe(addr, api.mux)
 
 	if err != nil {
@@ -31,24 +34,23 @@ func (api *Api) run() error {
 	return nil
 }
 
-func (api *Api) registerHandlers() {
+func (api *Server) registerHandlers() {
 	auth.RegisterSignUpHandler(api.mux, api.logger)
 	auth.RegisterSignInHandler(api.mux, api.logger)
 
 }
 
 func main() {
-	api := Api{
+	server := Server{
 		mux:    http.NewServeMux(),
 		logger: slog.New(slog.NewTextHandler(os.Stdout, nil)),
-		host:   "localhost",
-		port:   8080,
 	}
 
-	api.registerHandlers()
+	server.registerHandlers()
 
-	if err := api.run(); err != nil {
-		api.logger.Error(err.Error())
+	addr := fmt.Sprintf("%s:%d", "localhost", 8080)
+	if err := server.run(addr); err != nil {
+		server.logger.Error(err.Error())
 		os.Exit(1)
 	}
 }
