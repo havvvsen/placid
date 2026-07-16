@@ -1,7 +1,7 @@
 all: run
 
-build: cmd/app/main.go
-	go build -o ./bin/app ./cmd/app/main.go
+build: cmd/main.go
+	go build -o ./bin/server ./cmd/server/main.go
 
 run: build
-	./bin/app
+	./bin/server
