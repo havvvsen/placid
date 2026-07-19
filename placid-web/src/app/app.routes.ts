@@ -15,10 +15,6 @@ export const routes: Routes = [
     component: LoginPageComponent,
   },
   {
-    path: 'register',
-    component: RegisterPageComponent,
-  },
-  {
     path: 'home',
     component: HomePageComponent,
   },
