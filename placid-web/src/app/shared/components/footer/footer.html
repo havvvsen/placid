@@ -1,16 +1,76 @@
-<footer class="flex flex-row">
-  <div></div>
-  <div></div>
-  <div>
-    <h4>Placid Newsletter</h4>
-    <p>Subscribe to be the first to hear about new soundscapes and</p>
-    <p>features.Read stories about the Placid world and its</p>
-    <p>people</p>
+<footer class="flex flex-col mt-25 gap-5 mb-20">
+  <div class="flex flex-row gap-25 items-start justify-center">
+    <div>
+      <img
+        src="placid.png"
+        alt="The logo of placid. A mesh of neural networks"
+        height="40"
+        width="40"
+        class="rounded-4xl"
+      />
+    </div>
+    <div class="flex flex-row">
+      <div class="flex flex-col gap-1">
+        <li class="text-gray-200">Explore</li>
+        <li class="text-gray-500 hover:text-orange-600 hover:cursor-pointer">
+          <a href="">ADHD</a>
+        </li>
+        <li class="text-gray-500 hover:text-orange-600 hover:cursor-pointer">
+          <a href="">Focus</a>
+        </li>
+        <li class="text-gray-500 hover:text-orange-600 hover:cursor-pointer">
+          <a href="">Sleep</a>
+        </li>
+        <li class="text-gray-500 hover:text-orange-600 hover:cursor-pointer">
+          <a href="">Relax</a>
+        </li>
+        <li class="text-gray-500 hover:text-orange-600 hover:cursor-pointer">
+          <a href="">Activity</a>
+        </li>
+      </div>
+      <div></div>
+      <div></div>
+    </div>
+    <div class="flex flex-row">
+      <div class="flex flex-col gap-1">
+        <li class="text-gray-200">Research</li>
+        <li class="text-gray-500 hover:text-orange-600 hover:cursor-pointer">
+          <a href="">Science</a>
+        </li>
+        <li class="text-gray-500 hover:text-orange-600 hover:cursor-pointer">
+          <a href="">Technology</a>
+        </li>
+        <li class="text-gray-500 hover:text-orange-600 hover:cursor-pointer">
+          <a href="">Soundscapes</a>
+        </li>
+      </div>
+      <div></div>
+      <div></div>
+    </div>
+    <div>
+      <h4 class="text-gray-200">Placid Newsletter</h4>
+      <p class="text-gray-500">Subscribe to be the first to hear about new soundscapes and</p>
+      <p class="text-gray-500">features.Read stories about the Placid world and its</p>
+      <p class="text-gray-500">people</p>
 
-    <form action="submit">
-      <p>E-mail</p>
-      <input type="text" placeholder="example@placid.app" />
-      <button>Subscribe</button>
-    </form>
+      <form action="submit" class="mt-5 flex flex-col gap-3">
+        <p class="text-gray-500">E-mail</p>
+        <input
+          type="text"
+          placeholder="example@placid.app"
+          class="text-gray-400 pt-3 pb-3 pl-5 pr-5 border border-gray-600 rounded"
+        />
+        <button
+          class="text-gray-200 rounded bg-gray-800 border border-gray-400 pt-2 pb-2 hover:bg-orange-600 hover:border-orange-600 hover:cursor-pointer"
+        >
+          Subscribe
+        </button>
+      </form>
+    </div>
+  </div>
+  <div class="flex flex-row gap-10 items-center justify-center">
+    <p class="text-gray-400">Placid 2026</p>
+    <p class="text-gray-400">Privacy Policy</p>
+    <p class="text-gray-400">Support</p>
   </div>
 </footer>
