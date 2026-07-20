@@ -1,4 +1,4 @@
-package com.placid.spring_backend.controller;
+package com.placid.spring_backend.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserController {
     @GetMapping("/sounds")
     public String fetchSounds(@RequestParam String requestParam) {
-
         StringBuilder resBuilder = new StringBuilder();
         resBuilder.append("{mewo}");
 
