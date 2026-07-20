@@ -21,6 +21,12 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.data:spring-data-jpa:4.1.0")
+	implementation("tools.jackson.core:jackson-databind:3.2.1")
+	implementation("org.springframework.boot:spring-boot-starter-mail:4.1.0")
+	implementation("org.springframework.boot:spring-boot-starter-data-redis:4.1.0")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.1.0")
+	implementation("org.postgresql:postgresql:42.7.13")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
