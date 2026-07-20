@@ -1,4 +1,4 @@
-package com.placid.spring_backend.controller;
+package com.placid.spring_backend.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
