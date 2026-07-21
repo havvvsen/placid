@@ -182,12 +182,31 @@ func main() {
 
 	})
 
-	app.Post("/api/v1/admin/upload-sounds", func(c fiber.Ctx) error {
+	app.Post("/api/v1/admin/upload", func(c fiber.Ctx) error {
+
 		return c.SendString("H")
+	})
+
+	app.Get("/api/v1/soundscapes", func(c fiber.Ctx) error {
+		rows, err := pgConn.Query(context.Background(), "SELECT * FROM soundscapes;")
+
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": placiderror.ErrInternalServerError})
+
+		}
+
+		soundScapes, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.Soundscape])
+
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": placiderror.ErrInternalServerError})
+		}
+
+		return c.Status(fiber.StatusOK).JSON(soundScapes)
 	})
 
 	app.Delete("/api/v1/admin/delete-sound", func(c fiber.Ctx) error {
 		return c.SendString("H")
+
 	})
 
 	log.Fatal(app.Listen(":3000"))
