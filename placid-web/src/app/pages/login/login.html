@@ -1,26 +1,27 @@
 <div class="flex flex-col items-center justify-center mt-15">
-  <h4 class="text-4xl text-gray-200 mb-5">Sign In or Register</h4>
+  <h4 class="text-4xl text-gray-200 mb-5">Welcome back</h4>
   <p class="text-gray-500">With a Placid account, you can enjoy</p>
   <p class="text-gray-500">peace across multiple devices</p>
 
   <form action="submit" class="flex flex-col gap-2 mt-10">
     <p class="text-gray-400">E-mail</p>
-    <input type="text" placeholder="hi@placid.io" class="border border-gray-700 px-5 py-2" />
+    <input
+      type="text"
+      placeholder="hi@placid.io"
+      class="border border-gray-700 px-5 py-2 text-white"
+    />
+    <p class="text-gray-400">Password</p>
+    <input type="text" placeholder="password" class="border border-gray-700 px-5 py-2 text-white" />
     <button
-      class="border border-gray-700 bg-gray-800 px-10 py-2 rounded hover:bg-orange-600 hover:border-gray-200 hover:cursor-pointer hover:text-black mt-5"
+      class="border border-gray-700 bg-gray-700 px-10 py-2 rounded hover:bg-orange-600 hover:border-gray-200 hover:cursor-pointer hover:text-white mt-5 text-gray-200"
+      [routerLink]="['/home', 'jwt-token']"
     >
       Continue
     </button>
   </form>
 
-  <p class="my-3 text-gray-500 text-sm">Or</p>
-  <button class="flex flex-row gap-2 items-center px-10 hover:cursor-pointer hover:text-orange-600">
-    <img src="google.svg" alt="" height="20" width="20" />Sign in with Google
-  </button>
-  <div class="flex flex-row gap-1 mt-5">
-    <p class="text-gray-800 font-light text-xs">By continuing, you agree to</p>
-    <a href="" class="font-light text-gray-100 underline text-xs">Privacy Policy</a>
-    <p class="text-gray-800 font-light text-xs">and</p>
-    <a href="" class="text-gray-100 font-light underline text-xs">Terms & Conditions</a>
+  <div class="flex flex-row items-center gap-3 mt-5">
+    <p class="text-gray-200 font-light text-sm">Don't have an account ?</p>
+    <a href="/register" class="text-sm text-gray-100 hover:text-orange-600">Register</a>
   </div>
 </div>
