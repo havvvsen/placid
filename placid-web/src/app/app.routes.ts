@@ -3,6 +3,7 @@ import { HomePageComponent } from './pages/home/home.component';
 import { LoginPageComponent } from './pages/login/login.component';
 import { LandingPageComponent } from './pages/landing/landing.component';
 import { PlayerComponent } from './pages/player/player.component';
+import { RegisterPageComponent } from './pages/register/register.component';
 
 export const routes: Routes = [
   {
@@ -12,6 +13,10 @@ export const routes: Routes = [
   {
     path: 'login',
     component: LoginPageComponent,
+  },
+  {
+    path: 'register',
+    component: RegisterPageComponent,
   },
   {
     path: 'home',
