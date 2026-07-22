@@ -11,8 +11,10 @@ import (
 	"placid-backend/internal/models"
 	placiderror "placid-backend/internal/placid_error"
 	"placid-backend/pkg/utils"
+	"strings"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/redis/go-redis/v9"
@@ -28,6 +30,16 @@ type Server struct {
 
 func main() {
 	app := fiber.New()
+
+	app.Use(
+		cors.New(
+			cors.Config{
+				AllowOrigins: []string{"http://localhost:4200"},
+				AllowMethods: []string{"GET", "PUT", "POST", "DELETE", "OPTIONS"},
+				AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization"},
+			},
+		),
+	)
 
 	rdbClient := redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
@@ -56,7 +68,7 @@ func main() {
 
 		if c.HasBody() {
 			if err := c.Bind().Body(&user); err != nil {
-				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Bad request"})
+				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": placiderror.ErrBadRequest.Error()})
 			}
 
 			err := utils.SanitizeAuthRequest(&user)
@@ -67,7 +79,7 @@ func main() {
 				}
 
 				server.logger.Error(fmt.Sprintf("Failed to sanitize auth request: %s\n", err.Error()))
-
+				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": placiderror.ErrBadRequest.Error()})
 			}
 
 			passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
@@ -104,36 +116,35 @@ func main() {
 
 		if c.HasBody() {
 			if err := c.Bind().Body(&user); err != nil {
-				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Bad request"})
+				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": placiderror.ErrBadRequest.Error()})
 			}
 
-			rows, err := pgConn.Query(context.Background(), "SELECT password FROM users WHERE email==$1;", user.Email)
+			row := pgConn.QueryRow(context.Background(), "SELECT password FROM users WHERE email=$1;", user.Email)
 
-			if errors.Is(err, pgx.ErrNoRows) {
-				return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"message": placiderror.ErrInvalidCredentials})
-			}
+			if err := row.Scan(&inDatabaseHashedPassword); err != nil {
+				if errors.Is(err, pgx.ErrNoRows) {
+					// User does not exist in database
+					return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": placiderror.ErrInvalidCredentials.Error()})
+				}
 
-			if err := rows.Scan(&inDatabaseHashedPassword); err != nil {
-				server.logger.Error(fmt.Sprintf("Failed to scan password hash: %s\n", err.Error()))
-				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": placiderror.ErrInternalServerError})
+				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": placiderror.ErrInternalServerError.Error()})
 			}
 
 			err = bcrypt.CompareHashAndPassword(inDatabaseHashedPassword, []byte(user.Password))
 
 			if err != nil {
 				if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
-					return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"message": placiderror.ErrInvalidCredentials})
+					return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": placiderror.ErrInvalidCredentials.Error()})
 				}
 
-				server.logger.Error(fmt.Sprintf("Failed to compare hash and password: %s\n", err.Error()))
-				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": placiderror.ErrInternalServerError})
+				server.logger.Error(fmt.Sprintf("Compare hash and pass: %s\n", err.Error()))
+				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": placiderror.ErrInternalServerError.Error()})
 			}
 
-			c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Authentication successful"})
-
+			return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Authentication successful", "token": "jwt-token-8762y8a82n0824bsbfy82"})
 		}
 
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": placiderror.ErrBadRequest})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": placiderror.ErrBadRequest.Error()})
 	})
 
 	app.Delete("/api/v1/delete-account", func(c fiber.Ctx) error {
@@ -142,32 +153,32 @@ func main() {
 
 		if c.HasBody() {
 			if err := c.Bind().Body(&user); err != nil {
-				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": placiderror.ErrBadRequest})
+				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": placiderror.ErrBadRequest.Error()})
 			}
 
 			rows, err := pgConn.Query(context.Background(), "SELECT password FROM users WHERE email==$1;", user.Email)
 
 			if errors.Is(err, pgx.ErrNoRows) {
-				return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"message": placiderror.ErrInvalidCredentials})
+				return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"message": placiderror.ErrInvalidCredentials.Error()})
 			}
 
 			if err := rows.Scan(&inDatabaseHashedPassword); err != nil {
 				server.logger.Error(fmt.Sprintf("Failed to scan password hash: %s\n", err.Error()))
-				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": placiderror.ErrInternalServerError})
+				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": placiderror.ErrInternalServerError.Error()})
 			}
 
 			err = bcrypt.CompareHashAndPassword(inDatabaseHashedPassword, []byte(user.Password))
 
 			if err != nil {
 				if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
-					return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"message": placiderror.ErrInvalidCredentials})
+					return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"message": placiderror.ErrInvalidCredentials.Error()})
 				}
 
 				server.logger.Error(fmt.Sprintf("Failed to compare hash and password: %s\n", err.Error()))
-				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": placiderror.ErrInternalServerError})
+				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": placiderror.ErrInternalServerError.Error()})
 			}
 
-			_, err = pgConn.Exec(context.Background(), "DELETE FROM users WHERE email==$1;", user.Email)
+			_, err = pgConn.Exec(context.Background(), "DELETE FROM users WHERE email = $1;", user.Email)
 
 			if err != nil {
 				server.logger.Error(fmt.Sprintf("Failed to delete account: %s\n", err.Error()))
@@ -178,7 +189,7 @@ func main() {
 			c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Account deleted successfully"})
 		}
 
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": placiderror.ErrBadRequest})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": placiderror.ErrBadRequest.Error()})
 
 	})
 
@@ -188,25 +199,103 @@ func main() {
 	})
 
 	app.Get("/api/v1/soundscapes", func(c fiber.Ctx) error {
-		rows, err := pgConn.Query(context.Background(), "SELECT * FROM soundscapes;")
+		// rows, err := pgConn.Query(context.Background(), "SELECT * FROM soundscapes;")
 
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": placiderror.ErrInternalServerError})
+		// if err != nil {
+		// 	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": placiderror.ErrInternalServerError})
 
+		// }
+
+		// soundScapes, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.Soundscape])
+
+		// if err != nil {
+		// 	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": placiderror.ErrInternalServerError})
+		// }
+
+		soundScapes := `
+		{
+		"focus": [
+			{
+			"name": "Rain noise"
+			"url": "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3"
+			},
+			{
+			"name": "Rain noise"
+			"url": "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3"
+			},
+			{
+			"name": "Rain noise"
+			"url": "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3"
+			},
+
+		],
+		"sleep": [
+		{
+		"name": "Ocean Waves"
+		"url": "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3"
+		},
+		{
+		"name": "Ocean Waves"
+		"url": "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3"
+		},
+		{
+		"name": "Ocean Waves"
+		"url": "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3"
+		},
+
+		],
+		"relax": [
+		{
+		"name": "Ocean Waves"
+		"url": "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3"
+		},
+		{
+		"name": "Ocean Waves"
+		"url": "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3"
+		},
+
+		]
 		}
+		`
 
-		soundScapes, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.Soundscape])
-
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": placiderror.ErrInternalServerError})
-		}
-
-		return c.Status(fiber.StatusOK).JSON(soundScapes)
+		return c.Status(fiber.StatusOK).JSON(strings.Trim(soundScapes, " "))
 	})
 
 	app.Delete("/api/v1/admin/delete-sound", func(c fiber.Ctx) error {
 		return c.SendString("H")
+	})
 
+	app.Post("/api/v1/join-newsletter", func(c fiber.Ctx) error {
+		var request models.BasicEmailModel
+		var disposable models.BasicEmailModel
+		if c.HasBody() {
+			if err := c.Bind().Body(&request); err != nil {
+				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": placiderror.ErrBadRequest.Error()})
+			}
+
+			row := pgConn.QueryRow(context.Background(), "SELECT email FROM newsletter WHERE email = $1;", strings.Trim(request.Email, " "))
+			err := row.Scan(&disposable.Email)
+
+			if err != nil {
+				if errors.Is(err, pgx.ErrNoRows) {
+					query := "INSERT INTO newsletter (email) VALUES ( $1 );"
+					_, err = pgConn.Exec(context.Background(), query, request.Email)
+
+					if err != nil {
+						server.logger.Error(fmt.Sprintf("Failed to add email to newsletter: %s\n", err.Error()))
+						return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to add email to newsletter"})
+					}
+
+					return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Successful added to newsletter"})
+				}
+
+				server.logger.Error(fmt.Sprintf("Failed to add email to newsletter: %s\n", err.Error()))
+				return c.Status(fiber.StatusConflict).JSON(fiber.Map{"message": placiderror.ErrInternalServerError.Error()})
+			}
+
+			return c.Status(fiber.StatusConflict).JSON(fiber.Map{"error": placiderror.ErrEmailExistsNewsletter.Error()})
+		}
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Bad Request"})
 	})
 
 	log.Fatal(app.Listen(":3000"))
