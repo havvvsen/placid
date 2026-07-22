@@ -1,0 +1,23 @@
+<div>
+  <h4 class="text-gray-200">Placid Newsletter</h4>
+  <p class="text-gray-500">Subscribe to be the first to hear about new soundscapes and</p>
+  <p class="text-gray-500">features.Read stories about the Placid world and its</p>
+  <p class="text-gray-500">people</p>
+
+  <form class="mt-5 flex flex-col gap-3" (ngSubmit)="onSubmit()">
+    <p class="text-gray-500">E-mail</p>
+    <input
+      name="email"
+      type="text"
+      placeholder="example@placid.app"
+      [(ngModel)]="email"
+      class="text-gray-400 pt-3 pb-3 pl-5 pr-5 border border-gray-600 rounded"
+    />
+    <button
+      class="text-gray-200 rounded bg-gray-800 border border-gray-400 pt-2 pb-2 hover:bg-orange-600 hover:border-orange-600 hover:cursor-pointer"
+      type="submit"
+    >
+      Subscribe
+    </button>
+  </form>
+</div>
