@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
+import { FooterNewsLetterComponent } from './components/newsletter/newsletter.component';
 
 @Component({
   selector: 'app-footer-component',
-  styleUrls: ['footer.css'],
+  standalone: true,
+  imports: [FooterNewsLetterComponent],
   templateUrl: 'footer.html',
 })
 export class FooterComponent {}
