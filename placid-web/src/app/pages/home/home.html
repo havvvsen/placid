@@ -1,3 +1,23 @@
-<div>
-  <p class="text-white">Home Page</p>
+<div class="flex flex-col items-center justify-center gap-10">
+  @if (productsResource.isLoading()) {
+  <p class="text-white">Loading</p>
+  } @else if (productsResource.error()) {
+  <p class="text-red">An error occured</p>
+  } @else { @for (mood of moods; track mood.index) {
+  <div class="flex flex-col gap-5 w-1/2">
+    <h4 class="text-4xl text-white font-semibold">
+      {{mood.value.charAt(0).toUpperCase() + mood.value.slice(1)}}
+    </h4>
+    <div class="flex flex-col items-center justify-center">
+      @for (soundScape of productsResource.value()?.[mood.value]; track soundScape.id) {
+      <div class="flex flex-row items-center justify-between w-full">
+        <p class="text-gray-200 text-2xl">{{soundScape.name}}</p>
+        <img src="play.png" alt="Play icon" height="25" width="25" />
+      </div>
+      }
+    </div>
+  </div>
+  } }
+
+  <home-player-component></home-player-component>
 </div>
