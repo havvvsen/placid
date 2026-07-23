@@ -1,0 +1,27 @@
+<div class="flex flex-row items-center justify-center player-box hover:cursor-pointer gap-3">
+  <div class="flex flex-row gap-2 items-center">
+    <img src="" alt="" />
+    <div class="flex flex-col gap-3 items-center justify-around">
+      @if (isPlaying) {
+      <p class="text-gray-400">Playing</p>
+
+      }@else {
+      <p class="text-gray-400">Paused</p>
+      }
+      <p class="text-gray-400">{{currentSoundscape?.mood}}</p>
+    </div>
+  </div>
+  <div class="rounded-full hover:bg-orange-600">
+    @if (isPlaying) {
+    <button (click)="togglePlayStatus()">
+      <img src="play.png" alt="Press to pause" height="30" width="30" />
+    </button>
+
+    } @else {
+    <button (click)="togglePlayStatus()">
+      <img src="play.png" alt="Press to play" height="30" width="30" />
+    </button>
+
+    }
+  </div>
+</div>
