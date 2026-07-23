@@ -199,66 +199,70 @@ func main() {
 	})
 
 	app.Get("/api/v1/soundscapes", func(c fiber.Ctx) error {
-		// rows, err := pgConn.Query(context.Background(), "SELECT * FROM soundscapes;")
-
-		// if err != nil {
-		// 	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": placiderror.ErrInternalServerError})
-
-		// }
-
-		// soundScapes, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.Soundscape])
-
-		// if err != nil {
-		// 	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": placiderror.ErrInternalServerError})
-		// }
-
-		soundScapes := `
-		{
-		"focus": [
-			{
-			"name": "Rain noise"
-			"url": "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3"
+		soundscapes := fiber.Map{
+			"focus": []models.Soundscape{
+				{
+					Id:       "1",
+					Mood:     "focus",
+					Name:     "Rain Noise",
+					AudioUrl: "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3",
+				},
+				{
+					Id:       "2",
+					Mood:     "focus",
+					Name:     "Click Sounds",
+					AudioUrl: "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3",
+				},
+				{
+					Id:       "3",
+					Mood:     "focus",
+					Name:     "ASMR sounds",
+					AudioUrl: "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3",
+				},
 			},
-			{
-			"name": "Rain noise"
-			"url": "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3"
+			"relax": []models.Soundscape{
+				{
+					Id:       "4",
+					Mood:     "relax",
+					Name:     "Pinch sounds",
+					AudioUrl: "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3",
+				},
+				{
+					Id:       "5",
+					Mood:     "relax",
+					Name:     "Bay Sounds",
+					AudioUrl: "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3",
+				},
+				{
+					Id:       "6",
+					Mood:     "relax",
+					Name:     "Ocean Waves",
+					AudioUrl: "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3",
+				},
 			},
-			{
-			"name": "Rain noise"
-			"url": "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3"
+			"sleep": []models.Soundscape{
+				{
+					Id:       "7",
+					Mood:     "sleep",
+					Name:     "Baby sleep",
+					AudioUrl: "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3",
+				},
+				{
+					Id:       "8",
+					Mood:     "sleep",
+					Name:     "Click Sounds",
+					AudioUrl: "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3",
+				},
+				{
+					Id:       "9",
+					Mood:     "sleep",
+					Name:     "ASMR sounds",
+					AudioUrl: "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3",
+				},
 			},
-
-		],
-		"sleep": [
-		{
-		"name": "Ocean Waves"
-		"url": "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3"
-		},
-		{
-		"name": "Ocean Waves"
-		"url": "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3"
-		},
-		{
-		"name": "Ocean Waves"
-		"url": "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3"
-		},
-
-		],
-		"relax": [
-		{
-		"name": "Ocean Waves"
-		"url": "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3"
-		},
-		{
-		"name": "Ocean Waves"
-		"url": "https://placid-soundscapes-s3-bucket.s3.us-east-1.amazonaws.com/relax/4b.mp3"
-		},
-
-		]
 		}
-		`
 
-		return c.Status(fiber.StatusOK).JSON(strings.Trim(soundScapes, " "))
+		return c.Status(fiber.StatusOK).JSON(soundscapes)
 	})
 
 	app.Delete("/api/v1/admin/delete-sound", func(c fiber.Ctx) error {
