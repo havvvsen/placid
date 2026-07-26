@@ -1,6 +1,4 @@
-import { Mood } from './mood';
-
-export default class Track {
+export class Track {
   id: number;
   name: string;
   mood: string;
