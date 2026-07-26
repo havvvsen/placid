@@ -1,4 +1,12 @@
 services:
+  placid-web:
+    container_name: "placid-web"
+    build:
+      context: ./placid-web
+      dockerfile: Dockerfile.prod
+    restart: always
+    ports:
+      - 80:80
   placid-db:
     container_name: "placid-postgres-database"
     image: postgres:18-alpine
@@ -31,7 +39,7 @@ services:
     container_name: "placid-api"
     build:
       context: ./placid-backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     ports:
       - ${API_PORT}:${API_PORT}
     depends_on:
