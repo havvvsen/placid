@@ -2,7 +2,6 @@
 FROM golang:1.26-alpine AS builder
 
 WORKDIR /app
-COPY assets/ assets/
 COPY go.mod ./
 
 COPY main.go main.go
@@ -16,6 +15,7 @@ RUN apk --no-cache add ca-certificates
 
 WORKDIR /app
 
+COPY assets/ assets/
 COPY --from=builder /app/placid-file-server .
 
 EXPOSE ${FILE_SERVER_PORT}
