@@ -1,4 +1,4 @@
-package handlers
+package controllers
 
 import (
 	"errors"
@@ -11,8 +11,8 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func RegisterJoinNewsletterHandler(server *placid.Server) {
-	server.App.Post(server.Cfg.Endpoints.AddNewsletterSubscriber, func(c fiber.Ctx) error {
+func ControllerSubscribeNewsletter(server *placid.Server) fiber.Handler {
+	return func(c fiber.Ctx) error {
 		ctx := c.Context()
 		var request models.SubscribeToNewsletterRequest
 
@@ -42,13 +42,11 @@ func RegisterJoinNewsletterHandler(server *placid.Server) {
 			return c.Status(fiber.StatusConflict).JSON(fiber.Map{"error": placiderror.ErrEmailExistsNewsletter.Error()})
 		}
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": placiderror.ErrBadRequest.Error()})
-	})
-
-	server.Logger.Info(fmt.Sprintf("Registered %s", server.Cfg.Endpoints.AddNewsletterSubscriber))
+	}
 }
 
-func RegisterDeleteNewsletterSubscriberHandler(server *placid.Server) {
-	server.App.Delete(server.Cfg.Endpoints.DeleteNewsletterSubscriber, func(c fiber.Ctx) error {
+func ControllerUnsubscribeNewsletter(server *placid.Server) fiber.Handler {
+	return func(c fiber.Ctx) error {
 		ctx := c.Context()
 
 		var request models.UnsubscribeFromNewsletterRequest
@@ -80,6 +78,5 @@ func RegisterDeleteNewsletterSubscriberHandler(server *placid.Server) {
 		}
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": placiderror.ErrBadRequest.Error()})
 
-	})
-	server.Logger.Info(fmt.Sprintf("Registered %s", server.Cfg.Endpoints.AddNewsletterSubscriber))
+	}
 }

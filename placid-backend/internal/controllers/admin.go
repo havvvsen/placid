@@ -1,4 +1,4 @@
-package handlers
+package controllers
 
 import (
 	"errors"
@@ -13,8 +13,8 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-func RegisterAdminUploadTrackHandler(server *placid.Server) {
-	server.App.Post(server.Cfg.Endpoints.AdminUploadTrack, func(c fiber.Ctx) error {
+func ControllerAdminUploadTrack(server *placid.Server) fiber.Handler {
+	return func(c fiber.Ctx) error {
 		ctx := c.Context()
 		var request models.AdminUploadTrackRequest
 
@@ -37,8 +37,8 @@ func RegisterAdminUploadTrackHandler(server *placid.Server) {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": placiderror.ErrInternalServerError.Error()})
 			}
 
-			if user.IsAdmin.Valid && user.Token.Valid {
-				if user.IsAdmin.Bool && user.Token.String == request.Token {
+			if user.IsAdmin.Valid {
+				if user.IsAdmin.Bool {
 					err := server.Queries.AddTrack(
 						ctx,
 						database.AddTrackParams{
@@ -62,12 +62,11 @@ func RegisterAdminUploadTrackHandler(server *placid.Server) {
 		}
 
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": placiderror.ErrBadRequest.Error()})
-	})
-	server.Logger.Info(fmt.Sprintf("Registered %s", server.Cfg.Endpoints.AdminUploadTrack))
+	}
 }
 
-func RegisterAdminDeleteTracksHandler(server *placid.Server) {
-	server.App.Delete(server.Cfg.Endpoints.AdminDeleteTrack, func(c fiber.Ctx) error {
+func ControllerAdminDeleteTrack(server *placid.Server) fiber.Handler {
+	return func(c fiber.Ctx) error {
 		ctx := c.Context()
 		var request models.AdminDeleteTrackRequest
 
@@ -91,8 +90,8 @@ func RegisterAdminDeleteTracksHandler(server *placid.Server) {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": placiderror.ErrInternalServerError.Error()})
 			}
 
-			if user.IsAdmin.Valid && user.Token.Valid {
-				if user.IsAdmin.Bool && user.Token.String == request.Token {
+			if user.IsAdmin.Valid {
+				if user.IsAdmin.Bool {
 					err = server.Queries.DeleteTrack(ctx, request.Track.ID)
 
 					if err != nil {
@@ -109,6 +108,5 @@ func RegisterAdminDeleteTracksHandler(server *placid.Server) {
 		}
 
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": placiderror.ErrBadRequest.Error()})
-	})
-	server.Logger.Info(fmt.Sprintf("Registered %s", server.Cfg.Endpoints.AdminDeleteTrack))
+	}
 }

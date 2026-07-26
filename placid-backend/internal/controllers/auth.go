@@ -1,4 +1,4 @@
-package handlers
+package controllers
 
 import (
 	"errors"
@@ -16,8 +16,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func RegisterRegisterHandler(server *placid.Server) {
-	server.App.Post(server.Cfg.Endpoints.Register, func(c fiber.Ctx) error {
+func ControllerRegister(server *placid.Server) fiber.Handler {
+	return func(c fiber.Ctx) error {
 		ctx := c.Context()
 		var request models.RegisterRequest
 		var pgErr *pgconn.PgError
@@ -73,13 +73,11 @@ func RegisterRegisterHandler(server *placid.Server) {
 		}
 
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Request has no body"})
-	})
-
-	server.Logger.Info(fmt.Sprintf("Registered %s", server.Cfg.Endpoints.Register))
+	}
 }
 
-func RegisterLoginHandler(server *placid.Server) {
-	server.App.Post(server.Cfg.Endpoints.Login, func(c fiber.Ctx) error {
+func ControllerLogin(server *placid.Server) fiber.Handler {
+	return func(c fiber.Ctx) error {
 		ctx := c.Context()
 		var request models.LoginRequest
 
@@ -115,16 +113,10 @@ func RegisterLoginHandler(server *placid.Server) {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": placiderror.ErrInternalServerError.Error()})
 			}
 
-			token := utils.GenerateToken(request.Email)
-
-			err = server.Queries.UpdateUserToken(ctx, database.UpdateUserTokenParams{
-				Uuid: user.Uuid,
-				Token: pgtype.Text{
-					Valid: true, String: token,
-				}})
+			token, err := utils.GenerateJWTToken(server.Cfg.Secrets.JwtSecretKey, user.Email.String, user.IsAdmin.Bool)
 
 			if err != nil {
-				server.Logger.Error(fmt.Sprintf("%s - %s", request.Email, err.Error()))
+				server.Logger.Error(fmt.Sprintf("Failed to sign jwt token: %s", err.Error()))
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": placiderror.ErrInternalServerError.Error()})
 			}
 
@@ -132,7 +124,6 @@ func RegisterLoginHandler(server *placid.Server) {
 		}
 
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": placiderror.ErrBadRequest.Error()})
-	})
+	}
 
-	server.Logger.Info(fmt.Sprintf("Registered %s", server.Cfg.Endpoints.Login))
 }

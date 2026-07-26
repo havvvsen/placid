@@ -1,15 +1,14 @@
-package handlers
+package controllers
 
 import (
-	"fmt"
 	"placid-backend/internal/placid"
 	placiderror "placid-backend/internal/placid_error"
 
 	"github.com/gofiber/fiber/v3"
 )
 
-func RegisterTracksHandler(server *placid.Server) {
-	server.App.Get(server.Cfg.Endpoints.Tracks, func(c fiber.Ctx) error {
+func ControllerTracks(server *placid.Server) fiber.Handler {
+	return func(c fiber.Ctx) error {
 		ctx := c.Context()
 
 		tracks, err := server.Queries.GetTracks(ctx)
@@ -20,7 +19,6 @@ func RegisterTracksHandler(server *placid.Server) {
 		}
 
 		return c.Status(fiber.StatusOK).JSON(tracks)
-	})
+	}
 
-	server.Logger.Info(fmt.Sprintf("Registered %s", server.Cfg.Endpoints.Tracks))
 }
