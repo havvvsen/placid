@@ -24,12 +24,10 @@ type Track struct {
 }
 
 type User struct {
-	Uuid               pgtype.UUID      `json:"uuid"`
-	Email              pgtype.Text      `json:"email"`
-	PasswordHash       pgtype.Text      `json:"passwordHash"`
-	Token              pgtype.Text      `json:"token"`
-	TokenLastUpdatedAt pgtype.Timestamp `json:"tokenLastUpdatedAt"`
-	IsAdmin            pgtype.Bool      `json:"isAdmin"`
-	IsPremium          pgtype.Bool      `json:"isPremium"`
-	CreatedAt          pgtype.Timestamp `json:"createdAt"`
+	Uuid         pgtype.UUID      `json:"uuid"`
+	Email        pgtype.Text      `json:"email"`
+	PasswordHash pgtype.Text      `json:"passwordHash"`
+	IsAdmin      pgtype.Bool      `json:"isAdmin"`
+	IsPremium    pgtype.Bool      `json:"isPremium"`
+	CreatedAt    pgtype.Timestamp `json:"createdAt"`
 }

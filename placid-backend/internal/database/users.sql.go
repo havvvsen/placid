@@ -38,7 +38,7 @@ func (q *Queries) DeleteUser(ctx context.Context, email pgtype.Text) error {
 
 const getUser = `-- name: GetUser :one
 SELECT
-    uuid, email, password_hash, token, token_last_updated_at, is_admin, is_premium, created_at
+    uuid, email, password_hash, is_admin, is_premium, created_at
 FROM
     users
 WHERE
@@ -53,8 +53,6 @@ func (q *Queries) GetUser(ctx context.Context, email pgtype.Text) (User, error) 
 		&i.Uuid,
 		&i.Email,
 		&i.PasswordHash,
-		&i.Token,
-		&i.TokenLastUpdatedAt,
 		&i.IsAdmin,
 		&i.IsPremium,
 		&i.CreatedAt,
@@ -135,24 +133,5 @@ type UpdateUserSubscriptionParams struct {
 
 func (q *Queries) UpdateUserSubscription(ctx context.Context, arg UpdateUserSubscriptionParams) error {
 	_, err := q.db.Exec(ctx, updateUserSubscription, arg.Uuid, arg.IsPremium)
-	return err
-}
-
-const updateUserToken = `-- name: UpdateUserToken :exec
-UPDATE
-    users
-SET
-    token = $2
-WHERE
-    uuid = $1
-`
-
-type UpdateUserTokenParams struct {
-	Uuid  pgtype.UUID `json:"uuid"`
-	Token pgtype.Text `json:"token"`
-}
-
-func (q *Queries) UpdateUserToken(ctx context.Context, arg UpdateUserTokenParams) error {
-	_, err := q.db.Exec(ctx, updateUserToken, arg.Uuid, arg.Token)
 	return err
 }
