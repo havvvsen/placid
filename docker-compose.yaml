@@ -1,18 +1,59 @@
 services:
-  postgres:
+  placid-db:
     container_name: "placid-postgres-database"
     image: postgres:18-alpine
     restart: always
     ports:
       - 5432:5432
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-
-  redis:
-    container_name: "placid-redis-database"
-    image: redis:7-alpine
-    restart: always
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgresql:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  migrations:
+    image: kukymbr/goose-docker:3.27.2
+    environment:
+      GOOSE_DRIVER: ${GOOSE_DRIVER}
+      GOOSE_DBSTRING: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable
+      GOOSE_COMMAND: up
+    volumes:
+      - ./placid-backend/data/migrations:/migrations
+    depends_on:
+      placid-db:
+        condition: service_healthy
+  api:
+    container_name: "placid-api"
+    build:
+      context: ./placid-backend
+      dockerfile: Dockerfile
     ports:
-      - 6739:6739
+      - ${API_PORT}:${API_PORT}
+    depends_on:
+      placid-db:
+        condition: service_healthy
+    environment:
+      ALLOWED_CORS_ORIGINS: ${ALLOWED_CORS_ORIGINS}
+      API_HOST: ${API_HOST}
+      API_PORT: ${API_PORT}
+      API_VERSION: ${API_VERSION}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+  file-server:
+    container_name: "placid-file-server"
+    ports:
+      - ${FILE_SERVER_PORT}:${FILE_SERVER_PORT}
+    build:
+      context: ./file-server
+      dockerfile: Dockerfile
+volumes:
+  postgresql:
