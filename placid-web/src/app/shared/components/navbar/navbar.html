@@ -1,27 +1,42 @@
-<div class="flex flex-row justify-between items-center">
+<div class="flex flex-row justify-between items-center pt-3 px-5">
   <div class="flex flex-row gap-3 items-center">
     <img src="placid.png" alt="Logo of placid" width="40" height="40" class="rounded-3xl" />
     <h3 class="text-orange-600 text-3xl font-bold">Placid</h3>
+    @if (isLoggedIn) {
+     <p class="text-gray-500">Freemium</p>
+    }
   </div>
-  <ul class="flex flex-row gap-10 items-center">
-    <li class="text-white hover:text-orange-600 hover:cursor-pointer">ADHD</li>
-    <li class="text-white hover:text-orange-600 hover:cursor-pointer">Sleep</li>
-    <li class="text-white hover:text-orange-600 hover:cursor-pointer">Focus</li>
-    <li class="text-white hover:text-orange-600 hover:cursor-pointer">Relax</li>
-    <li class="text-white hover:text-orange-600 hover:cursor-pointer">Activity</li>
-  </ul>
+  @if (!isLoggedIn) {
+    <ul class="flex flex-row gap-10 items-center">
+      <li class="text-white hover:text-orange-600 hover:cursor-pointer">ADHD</li>
+      <li class="text-white hover:text-orange-600 hover:cursor-pointer">Sleep</li>
+      <li class="text-white hover:text-orange-600 hover:cursor-pointer">Focus</li>
+      <li class="text-white hover:text-orange-600 hover:cursor-pointer">Relax</li>
+      <li class="text-white hover:text-orange-600 hover:cursor-pointer">Activity</li>
+    </ul>
+  }
   <div class="flex flex-row gap-3 items-center">
-    <button
-      class="text-white bg-gray-700 pt-2 pb-2 pl-5 pr-5 rounded hover:cursor-pointer hover:bg-orange-600 border border-gray-600"
-      routerLink="/register"
-    >
-      Try Today
-    </button>
-    <button
-      class="text-black pt-2 pb-2 pl-5 pr-5 rounded hover:cursor-pointer bg-orange-600 hover:text-white"
-      routerLink="/login"
-    >
-      Sign In
-    </button>
+    @if (!isLoggedIn) {
+      <button
+        class="text-white bg-gray-700 pt-2 pb-2 pl-5 pr-5 rounded hover:cursor-pointer hover:bg-orange-600 border border-gray-600"
+        routerLink="/register"
+      >
+        Try Today
+      </button>
+      <button
+        class="text-black pt-2 pb-2 pl-5 pr-5 rounded hover:cursor-pointer bg-orange-600 hover:text-white"
+        routerLink="/login"
+      >
+        Sign In
+      </button>
+        } @else {
+          <button
+            class="text-white bg-gray-700 pt-2 pb-2 pl-5 pr-5 rounded hover:cursor-pointer hover:bg-red-800 border border-gray-600"
+            (click) = "authService.logoutUser()"
+          >
+            Sign Out
+          </button>
+
+        }
   </div>
 </div>
