@@ -1,13 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import sanitizeCredentials from '@/shared/utils/sanitizer';
+import AuthService from '@/services/authservice';
 
-interface RegisterResponse {
-  message: string;
-}
 
 @Component({
   standalone: true,
@@ -17,42 +14,33 @@ interface RegisterResponse {
 })
 export class RegisterPageComponent {
   private router = inject(Router);
-  private httpClient = inject(HttpClient);
+  private authService = inject(AuthService)
   email = '';
   password = '';
-  loading = false;
+  isLoading = false;
 
   onSubmit() {
-    this.loading = true;
+    this.isLoading = true;
 
     try {
-      sanitizeCredentials(this.email, this.password);
+      this.authService.sanitizeCredentials(this.email, this.password);
     } catch (e: any) {
       alert(e);
       return;
     }
 
-    const body = {
-      email: this.email,
-      password: this.password,
-    };
 
-    console.log(body);
-
-    this.httpClient
-      .post<RegisterResponse>('http://localhost:3000/api/v1/auth/register', body, {
-        observe: 'response',
-      })
-      .subscribe({
-        next: (res) => {
-          this.loading = false;
-          this.router.navigateByUrl('/login');
-          alert(res.body?.message);
-        },
-        error: (err: HttpErrorResponse) => {
-          this.loading = false;
-          alert(err.error.error);
-        },
-      });
+    this.authService.registerUser(this.email, this.password).subscribe({
+      next: (res) => {
+        this.isLoading = false;
+        this.router.navigateByUrl('/login');
+        alert(res.body?.message);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.isLoading = false;
+        console.log(`Status: ${err.status} . Message: ${err.message} . Url: ${err.url}`)
+        alert(err.status);
+      }
+    })
   }
 }
