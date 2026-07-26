@@ -7,4 +7,6 @@ import { FooterNewsLetterComponent } from './components/newsletter/newsletter.co
   imports: [FooterNewsLetterComponent],
   templateUrl: 'footer.html',
 })
-export class FooterComponent {}
+export class FooterComponent {
+
+}

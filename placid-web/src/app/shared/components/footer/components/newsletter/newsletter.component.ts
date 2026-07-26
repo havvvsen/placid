@@ -1,4 +1,5 @@
-import { HttpClient, HttpErrorResponse, HttpEvent, HttpResponse } from '@angular/common/http';
+import NewsletterService from '@/services/newsletterservice';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -10,46 +11,31 @@ import { FormsModule } from '@angular/forms';
 })
 export class FooterNewsLetterComponent {
   http = inject(HttpClient);
+  newsletterService = inject(NewsletterService)
   email = '';
-  loading = false;
-  error = '';
+  isLoading = false;
 
   onSubmit() {
-    const body = {
-      email: this.email,
-    };
-    console.log(`Submitting ${this.email}`);
+    this.isLoading = true
 
     if (!this.email.includes('@') || !this.email.includes('.') || this.email.length < 4) {
+      this.isLoading = false
+
       alert('Please provide a valid email');
       return;
     }
+    this.newsletterService.subscribeNewsletter(this.email).subscribe({
+      next: (res) => {
+        this.isLoading = false;
 
-    this.loading = true;
-    this.error = '';
+        alert(res.body?.message);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.isLoading = false;
+        alert(err.error.error);
+      }
+    })
 
-    this.http
-      .post('http://localhost:3000/api/v1/join-newsletter', { body }, { observe: 'response' })
-      .subscribe({
-        next: (response) => {
-          this.loading = false;
-          this.email = '';
-
-          if (response.status == 200) {
-            alert('Thanks for subscribing!');
-            return;
-          }
-        },
-
-        error: (err: HttpErrorResponse) => {
-          this.loading = false;
-          if (err.status == 0) {
-            alert('Server unavailable');
-            return;
-          }
-          this.error = err.error.error;
-          alert(this.error);
-        },
-      });
   }
+
 }
