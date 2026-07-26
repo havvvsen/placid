@@ -55,5 +55,7 @@ services:
     build:
       context: ./file-server
       dockerfile: Dockerfile
+    environment:
+      FILE_SERVER_BASE_PATH: ${FILE_SERVER_BASE_PATH}
 volumes:
   postgresql:
