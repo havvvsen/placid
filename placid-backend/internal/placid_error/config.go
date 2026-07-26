@@ -21,3 +21,6 @@ var ErrPostgresPortRequired error = errors.New("$POSTGRES_PORT is required")
 var ErrPostgresUsernameRequired error = errors.New("$POSTGRES_USERNAME is required")
 var ErrPostgresPasswordRequired error = errors.New("$POSTGRES_PASSWORD is required")
 var ErrPostgresDbRequired error = errors.New("$POSTGRES_DB is required")
+
+// SECRET KEYS
+var ErrJwtSecretKeyRequired error = errors.New("$JWT_SECRET_KEY is required")
