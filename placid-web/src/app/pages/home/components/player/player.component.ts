@@ -1,4 +1,4 @@
-import SoundScape from '@/shared/models/soundscape';
+import Track from '@/shared/models/track';
 import { Component } from '@angular/core';
 
 @Component({
@@ -8,14 +8,14 @@ import { Component } from '@angular/core';
 })
 export class PlayerComponent {
   isPlaying = false;
-  currentSoundscape: SoundScape | null = null;
+  currentTrack: Track | null = null;
   audio: HTMLAudioElement | null = null;
 
   constructor() {}
 
-  playSoundscape() {
+  playTrack() {
     try {
-      this.audio = new Audio(this.currentSoundscape?.audioUrl);
+      this.audio = new Audio(this.currentTrack?.audioUrl);
       this.audio.play();
     } catch {
       alert('Failed to play soundscape');
@@ -23,8 +23,8 @@ export class PlayerComponent {
   }
 
   togglePlayStatus() {
-    if (!this.currentSoundscape) {
-      alert('Please select a soundscape first');
+    if (!this.currentTrack) {
+      alert('Please select a track first');
       return;
     }
 

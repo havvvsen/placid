@@ -1,4 +1,6 @@
-<div class="flex flex-row items-center justify-center player-box hover:cursor-pointer gap-3">
+<div
+  class="flex flex-row items-center justify-center player-box hover:cursor-pointer gap-3 bg-gray-800 rounded-2xl py-3 px-4 border border-orange-500"
+>
   <div class="flex flex-row gap-2 items-center">
     <img src="" alt="" />
     <div class="flex flex-col gap-3 items-center justify-around">
@@ -8,7 +10,7 @@
       }@else {
       <p class="text-gray-400">Paused</p>
       }
-      <p class="text-gray-400">{{currentSoundscape?.mood}}</p>
+      <p class="text-gray-400">{{currentTrack?.mood}}</p>
     </div>
   </div>
   <div class="rounded-full hover:bg-orange-600">
