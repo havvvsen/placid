@@ -1,28 +1,25 @@
 package placid
 
+type Secret struct {
+	JwtSecretKey string
+}
+
 type EndPoint struct {
-	Register                   string
-	Login                      string
-	User                       string
-	DeleteAccount              string
-	Tracks                     string
-	AddNewsletterSubscriber    string
-	DeleteNewsletterSubscriber string
-	AdminUploadTrack           string
-	AdminDeleteTrack           string
+	Register              string
+	Login                 string
+	User                  string
+	DeleteAccount         string
+	Tracks                string
+	SubscribeNewsletter   string
+	UnsubscribeNewsletter string
+	AdminUploadTrack      string
+	AdminDeleteTrack      string
 }
 
 type ApiConfig struct {
 	ApiHost    string
 	ApiPort    string
 	ApiVersion string
-}
-
-type RedisConfig struct {
-	RedisHost     string
-	RedisPort     string
-	RedisUsername string
-	RedisPassword string
 }
 
 type PostgresConfig struct {
@@ -37,6 +34,6 @@ type Config struct {
 	AllowedCORSOrigins []string
 	Endpoints          *EndPoint
 	ApiConfig          *ApiConfig
-	RedisConfig        *RedisConfig
+	Secrets            *Secret
 	PostgresConfig     *PostgresConfig
 }
