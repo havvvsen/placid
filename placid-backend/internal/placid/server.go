@@ -6,14 +6,12 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/jackc/pgx/v5"
-	"github.com/redis/go-redis/v9"
 )
 
 type Server struct {
-	Cfg         *Config
-	App         *fiber.App
-	DbConn      *pgx.Conn
-	Queries     *database.Queries
-	Logger      *slog.Logger
-	RedisClient *redis.Client
+	Cfg     *Config
+	App     *fiber.App
+	DbConn  *pgx.Conn
+	Queries *database.Queries
+	Logger  *slog.Logger
 }
