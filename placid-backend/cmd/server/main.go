@@ -6,12 +6,13 @@ import (
 	"log/slog"
 	"os"
 	"placid-backend/internal/config"
+	"placid-backend/internal/controllers"
 	"placid-backend/internal/database"
-	"placid-backend/internal/handlers"
+	"placid-backend/internal/initializers"
+	"placid-backend/internal/middlewares"
 	"placid-backend/internal/placid"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/redis/go-redis/v9"
 )
 
 func main() {
@@ -25,42 +26,74 @@ func main() {
 		Logger: logger,
 		Cfg: &placid.Config{
 			ApiConfig:      &placid.ApiConfig{},
-			RedisConfig:    &placid.RedisConfig{},
 			PostgresConfig: &placid.PostgresConfig{},
 		},
 	}
 
-	if server.Cfg, err = config.FillEnv(); err != nil {
+	if server.Cfg, err = initializers.FillEnv(); err != nil {
 		server.Logger.Error(err.Error())
 		os.Exit(1)
 	}
 
-	redisClient := redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%s", server.Cfg.RedisConfig.RedisHost, server.Cfg.RedisConfig.RedisPort),
-		Username: server.Cfg.RedisConfig.RedisUsername,
-		Password: server.Cfg.RedisConfig.RedisPassword,
-		DB:       0,
-		Protocol: 2,
-	})
-
-	server.RedisClient = redisClient
-
-	dbConn := config.ConnectPlacidDb(ctx, logger, server.Cfg.PostgresConfig)
+	dbConn := initializers.ConnectDatabase(ctx, logger, server.Cfg.PostgresConfig)
 
 	server.Queries = database.New(dbConn)
 	server.App = app
 
 	config.ConfigureCors(server.App, server.Cfg.AllowedCORSOrigins)
 
-	// Register handlers
-	handlers.RegisterRegisterHandler(server)
-	handlers.RegisterLoginHandler(server)
-	handlers.RegisterTracksHandler(server)
-	handlers.RegisterUserHandler(server)
-	handlers.RegisterDeleteAccountHandler(server)
-	handlers.RegisterJoinNewsletterHandler(server)
-	handlers.RegisterAdminUploadTrackHandler(server)
-	handlers.RegisterAdminDeleteTracksHandler(server)
+	// Register controllers
+	// Register
+	server.App.Post(server.Cfg.Endpoints.Register, controllers.ControllerRegister(server))
+	// Login
+	server.App.Post(server.Cfg.Endpoints.Login, controllers.ControllerLogin(server))
+	// Users
+	server.App.Post(
+		server.Cfg.Endpoints.User,
+		middlewares.AuthMiddleware(
+			server.Logger,
+			server.Cfg.Secrets.JwtSecretKey,
+		),
+		controllers.ControllerUser(server),
+	)
+	// Delete Account
+	server.App.Delete(
+		server.Cfg.Endpoints.DeleteAccount,
+		middlewares.AuthMiddleware(
+			server.Logger,
+			server.Cfg.Secrets.JwtSecretKey,
+		),
+		controllers.ControllerDeleteAccount(server),
+	)
+	// Tracks
+	server.App.Get(server.Cfg.Endpoints.Tracks,
+		middlewares.AuthMiddleware(
+			server.Logger,
+			server.Cfg.Secrets.JwtSecretKey,
+		),
+		controllers.ControllerTracks(server),
+	)
+	// Subscribe Newsletter
+	server.App.Post(server.Cfg.Endpoints.SubscribeNewsletter, controllers.ControllerSubscribeNewsletter(server))
+	// Unsubscribe Newsletter
+	server.App.Delete(server.Cfg.Endpoints.UnsubscribeNewsletter, controllers.ControllerUnsubscribeNewsletter(server))
+	// Admin Upload Track
+	server.App.Post(server.Cfg.Endpoints.AdminUploadTrack,
+		middlewares.AuthMiddleware(
+			server.Logger,
+			server.Cfg.Secrets.JwtSecretKey,
+		),
+		controllers.ControllerAdminUploadTrack(server),
+	)
+	// Admin Delete Track
+	server.App.Delete(
+		server.Cfg.Endpoints.AdminDeleteTrack,
+		middlewares.AuthMiddleware(
+			server.Logger,
+			server.Cfg.Secrets.JwtSecretKey,
+		),
+
+		controllers.ControllerAdminDeleteTrack(server))
 
 	if err = app.Listen(
 		fmt.Sprintf(
