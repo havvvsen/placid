@@ -95,17 +95,11 @@ func main() {
 
 		controllers.ControllerAdminDeleteTrack(server))
 
-	// if err = app.Listen(
-	// 	fmt.Sprintf(
-	// 		"%s:%s",
-	// 		server.Cfg.ApiConfig.ApiHost,
-	// 		server.Cfg.ApiConfig.ApiPort,
-	// 	)); err != nil {
-	// 	server.Logger.Error(err.Error())
-	//
-	// 	os.Exit(1)
-	// }
-	if err = app.Listen(server.Cfg.ApiConfig.ApiPort); err != nil {
+	if err = app.Listen(
+		fmt.Sprintf(
+			":%s",
+			server.Cfg.ApiConfig.ApiPort,
+		)); err != nil {
 		server.Logger.Error(err.Error())
 
 		os.Exit(1)
