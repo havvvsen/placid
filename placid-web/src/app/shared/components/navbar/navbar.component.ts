@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { ZardButtonComponent } from '@/shared/components/button';
+import AuthService from '@/services/authservice';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -7,4 +7,18 @@ import { RouterLink } from '@angular/router';
   templateUrl: 'navbar.html',
   imports: [RouterLink],
 })
-export class NavbarComponent {}
+export class NavbarComponent {
+  authService = inject(AuthService)
+  isLoggedIn: boolean = false
+
+  constructor() {
+    let token = localStorage.getItem("token")
+    console.log(token)
+
+    if (token == "" || token == null || token == undefined) {
+      return
+    }
+
+    this.isLoggedIn = true
+  }
+}
