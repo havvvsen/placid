@@ -1,37 +1,60 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { httpResource } from '@angular/common/http';
 import { PlayerComponent } from './components/player/player.component';
-import { TrackList, TrackService } from '@/services/trackservice';
-import Track from '@/shared/models/track';
-
-// interface TrackResponse {
-//   focus: Track[];
-//   relax: Track[];
-//   sleep: Track[];
-// }
+import { TrackService } from '@/services/trackservice';
+import { PlayerService } from '@/services/playerservice';
+import { Track } from '@/shared/models/track';
+import { TrackList } from '@/shared/models/tracklist';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Environment } from '@/shared/constants/environment';
+import { NavbarComponent } from '@/shared/components/navbar/navbar.component';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, PlayerComponent],
+  imports: [CommonModule, PlayerComponent, NavbarComponent],
   selector: 'app-home-page',
   templateUrl: 'home.html',
 })
 export class HomePageComponent {
-  soundscapeService = inject(TrackService);
-  trackList: TrackList | null;
+  private router = inject(Router)
+  private trackService = inject(TrackService);
+  public playerService = inject(PlayerService);
+  private cdr = inject(ChangeDetectorRef);
+  trackList: TrackList | null = null;
   defaultTrack: Track | undefined = undefined;
-
-  // productsResource = httpResource<SoundScapesResponse>(() => ({
-  //   url: 'http://localhost:3000/api/v1/soundscapes',
-  // }));
+  isLoading = false;
+  env = Environment
 
   constructor() {
-    this.trackList = this.soundscapeService.getTrackList();
-    this.defaultTrack = this.trackList?.focus?.[0];
+    this.isLoading = true;
+    this.trackService.getTrackList().subscribe({
+      next: (res: Track[]) => {
+        const focusTracks = res.filter(t => t.mood === 'focus');
+        const relaxTracks = res.filter(t => t.mood === 'relax');
+        const sleepTracks = res.filter(t => t.mood === 'sleep');
+
+        this.trackList = {
+          focus: focusTracks,
+          relax: relaxTracks,
+          sleep: sleepTracks
+        };
+
+        this.defaultTrack = this.trackList.focus[0];
+        this.playerService.setTrackList(res);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err: HttpErrorResponse) => {
+        alert(err.error?.error || 'Error fetching tracks');
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
-  printTrackList() {
-    console.log(this.trackList);
+  play(track: Track) {
+    this.playerService.playTrack(track);
   }
+
 }
