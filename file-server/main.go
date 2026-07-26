@@ -8,13 +8,19 @@ import (
 )
 
 func main() {
-	basePath := "/home/ubuntu/placid/file-server/assets"
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
 	port, isSet := os.LookupEnv("FILE_SERVER_PORT")
 
 	if !isSet {
 		logger.Error("$FILE_SERVER_PORT is required")
+		os.Exit(1)
+	}
+
+	basePath, isSet := os.LookupEnv("FILE_SERVER_BASE_PATH")
+
+	if !isSet {
+		logger.Error("$FILE_SERVER_BASE_PATH is required")
 		os.Exit(1)
 	}
 
