@@ -11,11 +11,8 @@ RUN npm run build
 
 # Stage 2
 FROM nginx:${NGINX_VERSION}
-WORKDIR /app
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --chown=nginx:nginx --from=builder /app/dist/*/browser /usr/share/nginx/html
-# USER nginx
 EXPOSE 80
 
-ENTRYPOINT [ "nginx","-c", "/etc/nginx/nginx.conf" ]
-CMD [ "-g", "daemon off;" ]
+CMD [ "nginx","-g", "daemon off;" ]
