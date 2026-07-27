@@ -1,18 +1,14 @@
 services:
   placid-web:
+    image: ghcr.io/${GHCR_USERNAME}/placid-web
     container_name: "placid-web"
-    build:
-      context: ./placid-web
-      dockerfile: Dockerfile.prod
     restart: always
     ports:
       - 80:80
   placid-db:
-    container_name: "placid-postgres-database"
     image: postgres:18-alpine
+    container_name: "placid-postgres-database"
     restart: always
-    # ports:
-    #   - 5432:5432
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -36,10 +32,8 @@ services:
       placid-db:
         condition: service_healthy
   api:
+    image: ghcr.io/${GHCR_USERNAME}/placid-api
     container_name: "placid-api"
-    build:
-      context: ./placid-backend
-      dockerfile: Dockerfile.prod
     ports:
       - ${API_PORT}:${API_PORT}
     depends_on:
@@ -57,12 +51,10 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
   file-server:
+    image: ghcr.io/${GHCR_USERNAME}/placid-file-server
     container_name: "placid-file-server"
     ports:
       - ${FILE_SERVER_PORT}:${FILE_SERVER_PORT}
-    build:
-      context: ./file-server
-      dockerfile: Dockerfile
     environment:
       FILE_SERVER_PORT: ${FILE_SERVER_PORT}
       FILE_SERVER_BASE_PATH: ${FILE_SERVER_BASE_PATH}
