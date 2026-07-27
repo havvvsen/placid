@@ -24,6 +24,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./placid-web
-          file: Dockerfile.prod
+          file: ./placid-web/Dockerfile.prod
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/placid-web:latest
