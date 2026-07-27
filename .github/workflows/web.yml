@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - "placid-web/**"
+  workflow_dispatch:
 permissions:
   contents: read
   packages: write

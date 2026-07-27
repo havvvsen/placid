@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - "placid-backend/**"
+  workflow_dispatch:
 permissions:
   contents: read
   packages: write

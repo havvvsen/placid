@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - "file-server/**"
+  workflow_dispatch:
 permissions:
   contents: read
   packages: write
