@@ -23,7 +23,7 @@ jobs:
       - name: Build Image
         uses: docker/build-push-action@v6
         with:
-          context: ../../placid-web/Dockerfile.prod
+          context: ./placid-web
           file: Dockerfile.prod
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/placid-web:latest
