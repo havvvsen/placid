@@ -39,7 +39,7 @@ export class PlayerService {
 
     this.currentTrack.set(track);
     this.audio = new Audio(`${Environment.trackServerBaseUrl}/${track?.audioUrl}`);
-    this.audio.loop = true
+    this.audio.loop = true;
     this.audio.volume = this.volume();
 
     this.audio.onplay = () => this.isPlaying.set(true);
@@ -51,13 +51,16 @@ export class PlayerService {
       this.playNext();
     };
 
-    this.audio.play().then(() => {
-      this.isPlaying.set(true);
-    }).catch((err) => {
-      console.log(`${Environment.trackServerBaseUrl}/${track?.audioUrl}`)
-      console.error('Playback error:', err);
-      this.isPlaying.set(false);
-    });
+    this.audio
+      .play()
+      .then(() => {
+        this.isPlaying.set(true);
+      })
+      .catch((err) => {
+        console.log(`${Environment.trackServerBaseUrl}/${track?.audioUrl}`);
+        console.error('Playback error:', err);
+        this.isPlaying.set(false);
+      });
   }
 
   public togglePlayStatus() {
@@ -86,12 +89,15 @@ export class PlayerService {
     if (this.isPlaying()) {
       this.audio.pause();
     } else {
-      this.audio.play().then(() => {
-        this.isPlaying.set(true);
-      }).catch((err) => {
-        console.error('Playback error:', err);
-        this.isPlaying.set(false);
-      });
+      this.audio
+        .play()
+        .then(() => {
+          this.isPlaying.set(true);
+        })
+        .catch((err) => {
+          console.error('Playback error:', err);
+          this.isPlaying.set(false);
+        });
     }
   }
 
@@ -144,4 +150,3 @@ export class PlayerService {
 }
 
 export default PlayerService;
-
