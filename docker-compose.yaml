@@ -1,12 +1,4 @@
 services:
-  placid-nginx:
-    image: ghcr.io/${GHCR_USERNAME}/placid-nginx:latest
-    container_name: "placid-nginx"
-    restart: always
-    ports:
-      - 80:80
-      - 5000:5000
-      - 5001:5001
   placid-db:
     image: postgres:18-alpine
     container_name: "placid-db"
@@ -62,5 +54,16 @@ services:
     environment:
       FILE_SERVER_PORT: ${FILE_SERVER_PORT}
       FILE_SERVER_BASE_PATH: ${FILE_SERVER_BASE_PATH}
+  placid-nginx:
+    image: ghcr.io/${GHCR_USERNAME}/placid-nginx:latest
+    container_name: "placid-nginx"
+    restart: always
+    ports:
+      - 80:80
+      - 5000:5000
+      - 5001:5001
+    depends_on:
+      placid-api:
+        condition: service_ready
 volumes:
   postgresql:
