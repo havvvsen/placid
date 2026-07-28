@@ -1,3 +1,13 @@
-<div>
-
-</div>
+@if (loadingService.isLoading()) {
+  <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-9999">
+    <div>
+      <img
+        src="placid.png"
+        alt="The logo of placid"
+        height="60"
+        width="60"
+        class="animate-bounce"
+      />
+    </div>
+  </div>
+}
