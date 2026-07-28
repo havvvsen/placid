@@ -9,7 +9,7 @@ services:
       - 5001:5001
   placid-db:
     image: postgres:18-alpine
-    container_name: "placid-postgres-database"
+    container_name: "placid-db"
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -23,8 +23,9 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-  migrations:
+  placid-migrations:
     image: kukymbr/goose-docker:3.27.2
+    container_name: "placid-migrations"
     environment:
       GOOSE_DRIVER: ${GOOSE_DRIVER}
       GOOSE_DBSTRING: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable
@@ -34,8 +35,8 @@ services:
     depends_on:
       placid-db:
         condition: service_healthy
-  api:
-    image: ghcr.io/${GHCR_USERNAME}/placid-backend:latest
+  placid-api:
+    image: ghcr.io/${GHCR_USERNAME}/placid-api:latest
     container_name: "placid-api"
     ports:
       - ${API_PORT}:${API_PORT}
