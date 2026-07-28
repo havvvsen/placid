@@ -1,10 +1,12 @@
 services:
-  # placid-web:
-  #   image: ghcr.io/${GHCR_USERNAME}/placid-web:latest
-  #   container_name: "placid-web"
-  #   restart: always
-  #   ports:
-  #     - 80:80
+  placid-nginx:
+    image: ghcr.io/${GHCR_USERNAME}/placid-nginx:latest
+    container_name: "placid-nginx"
+    restart: always
+    ports:
+      - 80:80
+      - 5000:5000
+      - 5001:5001
   placid-db:
     image: postgres:18-alpine
     container_name: "placid-postgres-database"
