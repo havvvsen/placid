@@ -1,16 +1,15 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Track } from '@/shared/models/track';
 import { Environment } from '@/shared/constants/environment';
+import { NotificationService } from './notificationservice';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PlayerService {
+  notificationService = inject(NotificationService);
   public currentTrack = signal<Track | null>(null);
   public isPlaying = signal<boolean>(false);
-  public currentTime = signal<number>(0);
-  public duration = signal<number>(0);
-  public volume = signal<number>(1);
   public trackList = signal<Track[]>([]);
 
   private audio: HTMLAudioElement | null = null;
@@ -32,24 +31,14 @@ export class PlayerService {
       this.audio.pause();
       this.audio.onplay = null;
       this.audio.onpause = null;
-      this.audio.ontimeupdate = null;
-      this.audio.onloadedmetadata = null;
-      this.audio.onended = null;
     }
 
     this.currentTrack.set(track);
     this.audio = new Audio(`${Environment.trackServerBaseUrl}/${track?.audioUrl}`);
     this.audio.loop = true;
-    this.audio.volume = this.volume();
 
     this.audio.onplay = () => this.isPlaying.set(true);
     this.audio.onpause = () => this.isPlaying.set(false);
-    this.audio.ontimeupdate = () => this.currentTime.set(this.audio?.currentTime || 0);
-    this.audio.onloadedmetadata = () => this.duration.set(this.audio?.duration || 0);
-    this.audio.onended = () => {
-      this.isPlaying.set(false);
-      this.playNext();
-    };
 
     this.audio
       .play()
@@ -57,8 +46,11 @@ export class PlayerService {
         this.isPlaying.set(true);
       })
       .catch((err) => {
-        console.log(`${Environment.trackServerBaseUrl}/${track?.audioUrl}`);
-        console.error('Playback error:', err);
+        if (err instanceof DOMException && err.name === 'AbortError') {
+          return;
+        }
+
+        this.notificationService.error(err);
         this.isPlaying.set(false);
       });
   }
@@ -75,15 +67,8 @@ export class PlayerService {
 
     if (!this.audio) {
       this.audio = new Audio(current.audioUrl);
-      this.audio.volume = this.volume();
       this.audio.onplay = () => this.isPlaying.set(true);
       this.audio.onpause = () => this.isPlaying.set(false);
-      this.audio.ontimeupdate = () => this.currentTime.set(this.audio?.currentTime || 0);
-      this.audio.onloadedmetadata = () => this.duration.set(this.audio?.duration || 0);
-      this.audio.onended = () => {
-        this.isPlaying.set(false);
-        this.playNext();
-      };
     }
 
     if (this.isPlaying()) {
@@ -95,7 +80,10 @@ export class PlayerService {
           this.isPlaying.set(true);
         })
         .catch((err) => {
-          console.error('Playback error:', err);
+          if (err instanceof DOMException && err.name === 'AbortError') {
+            return;
+          }
+          this.notificationService.error(err);
           this.isPlaying.set(false);
         });
     }
@@ -105,47 +93,6 @@ export class PlayerService {
     if (this.audio && this.isPlaying()) {
       this.audio.pause();
     }
-  }
-
-  public seek(seconds: number) {
-    if (this.audio) {
-      this.audio.currentTime = seconds;
-      this.currentTime.set(seconds);
-    }
-  }
-
-  public setVolume(volume: number) {
-    const clamped = Math.max(0, Math.min(1, volume));
-    this.volume.set(clamped);
-    if (this.audio) {
-      this.audio.volume = clamped;
-    }
-  }
-
-  public playNext() {
-    const tracks = this.trackList();
-    if (tracks.length === 0) return;
-    const current = this.currentTrack();
-    if (!current) {
-      this.playTrack(tracks[0]);
-      return;
-    }
-    const index = tracks.findIndex((t) => t.id === current.id);
-    const nextIndex = (index + 1) % tracks.length;
-    this.playTrack(tracks[nextIndex]);
-  }
-
-  public playPrevious() {
-    const tracks = this.trackList();
-    if (tracks.length === 0) return;
-    const current = this.currentTrack();
-    if (!current) {
-      this.playTrack(tracks[0]);
-      return;
-    }
-    const index = tracks.findIndex((t) => t.id === current.id);
-    const prevIndex = (index - 1 + tracks.length) % tracks.length;
-    this.playTrack(tracks[prevIndex]);
   }
 }
 
