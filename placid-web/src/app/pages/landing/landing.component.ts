@@ -10,25 +10,4 @@ import { Router, RouterLink } from '@angular/router';
   selector: 'app-landing-page',
   templateUrl: 'landing.html',
 })
-export class LandingPageComponent {
-}
-// export class LandingPageComponent implements OnInit {
-//   private router = inject(Router);
-//
-//   ngOnInit() {
-//     const token = localStorage.getItem('token')?.trim();
-//
-//     console.log("Init ")
-//     if (token == "" || token == null || token == undefined) {
-//       return
-//     }
-//
-//     if (token != "" || token != null || token != undefined) {
-//       console.log("Is not null ")
-//       console.log(`Token: ${token}`)
-//       this.router.navigateByUrl('/home');
-//       return
-//     }
-//     console.log("Is null ")
-//   }
-// }
+export class LandingPageComponent {}
