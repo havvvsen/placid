@@ -1,12 +1,19 @@
 @import 'tailwindcss';
 @plugin "tailwindcss-animate";
 
+html {
+  scroll-behavior: smooth;
+}
+
+input:focus {
+  outline: none;
+}
+
 body {
   background-color: black;
   padding: 9px 20px 10px 20px;
   height: 99vh;
 }
-
 
 li {
   list-style: none;
