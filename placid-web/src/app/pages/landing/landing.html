@@ -1,24 +1,72 @@
 <app-navbar-component></app-navbar-component>
 <div class="flex flex-col justify-center items-center mt-30">
   <h4 class="text-gray-200 text-6xl mb-3">Placid</h4>
-  <p class="text-gray-400">Personalized soundscapes to help you focus, relax and</p>
-  <p class="text-gray-400">sleep. Backed by neuroscience</p>
+  <p class="text-gray-200/75">Personalized soundscapes to help you focus, relax and</p>
+  <p class="text-gray-200/75">sleep. Backed by neuroscience</p>
 
   <button
-    class="pt-3 pb-3 pl-10 pr-10 text-white bg-gray-800 border border-gray-400 hover:bg-orange-600 hover:border-black rounded mt-10 mb-15"
+    class="pt-3 pb-3 pl-10 pr-10 text-white border border-black bg-orange-600 hover:border-gray-400 rounded mt-10 mb-15"
     routerLink="/login"
   >
     Try Today
   </button>
 
-  <p class="text-gray-200 text-2xl mb-3">Backed by Neuroscience</p>
-  <p class="text-gray-400">
-    Our patented technology creates soundscapes that adapt in real-time.It
-  </p>
-  <p class="text-gray-400">reacts to inputs like time of day and weather.</p>
-  <p class="text-gray-400">
-    Neuroscience shows Placid consistently improves focus and lowers stress
-  </p>
+  <img src="anxiety-faces.png" alt="Weird faces staring at you" />
+
+  <h4 class="text-gray-200 text-3xl mt-7 mb-3">Backed by Neuroscience</h4>
+  <p class="text-gray-200/75">We use carefully crafted sound frequencies and</p>
+  <p class="text-gray-200/75">audio patterns inspired by neuroscience research</p>
+  <p class="text-gray-200/75">to help promote relaxation, improve focus</p>
+  <p class="text-gray-200/75">and support a calmer state of mind.</p>
+
+  <!-- ADHD -->
+  <h4 id="adhd" class="text-3xl text-gray-200 mt-15 mb-3 scroll-mt-24">ADHD</h4>
+  <div class="flex flex-col items-center justify-center gap-3">
+    <img
+      src="number-1.png"
+      alt="an image with the text #1 and an up arrow"
+      height="200"
+      width="200"
+    />
+    <p class="text-gray-200/75">Placid kills distractions ensuring you achieve all your tasks</p>
+  </div>
+
+  <!-- SLEEP -->
+  <h4 id="sleep" class="text-3xl text-gray-200 mt-5 mb-3 scroll-mt-24">Sleep</h4>
+  <div class="flex flex-col items-center justify-center gap-3 mt-5">
+    <img
+      src="stress-stats.png"
+      alt="an image with the text 3.6x and a down arrow"
+      height="200"
+      width="200"
+    />
+    <p class="text-gray-200/75">
+      Placid reduces stress levels with regular use, improving sleep quality
+    </p>
+  </div>
+  <!-- FOCUS -->
+  <h4 id="focus" class="text-3xl text-gray-200 mt-5 mb-3 scroll-mt-24">Focus</h4>
+  <div class="flex flex-col items-center justify-center gap-3">
+    <img
+      src="focus-stats.png"
+      alt="an image with the text 7x and an up arrow"
+      height="200"
+      width="200"
+    />
+    <p class="text-gray-200/75">Placid helps you achieve a longer lasting flow state.</p>
+  </div>
+
+  <!-- RELAX -->
+  <h4 id="relax" class="text-3xl text-gray-200 mt-5 mb-3 scroll-mt-24">Relax</h4>
+  <div class="flex flex-col items-center justify-center gap-3 mt-5">
+    <img
+      src="95-increase.png"
+      alt="an image with the text 3.6x and a down arrow"
+      height="200"
+      width="200"
+    />
+    <p class="text-gray-200/75">Relaxation sessions recharge your energy</p>
+  </div>
 </div>
 
 <app-footer-component></app-footer-component>
