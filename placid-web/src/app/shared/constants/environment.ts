@@ -5,9 +5,9 @@ let prefix = `api/${apiVersion}`;
 // trackServerBaseUrl: "http://localhost:3001/tracks",
 // bannerServerBaseUrl: "http://localhost:3001/tracks/images",
 export const Environment = {
-  apiBaseUrl: 'http://placidus.duckdns.org:5000',
-  trackServerBaseUrl: 'http://placidus.duckdns.org:5001/assets/tracks',
-  bannerServerBaseUrl: 'http://placidus.duckdns.org:5001/assets/images',
+  apiBaseUrl: 'http://placidus.duckdns.org',
+  trackServerBaseUrl: 'http://placidus.duckdns.org/assets/tracks',
+  bannerServerBaseUrl: 'http://placidus.duckdns.org/assets/images',
   endpoints: {
     register: `${prefix}/register`,
     login: `${prefix}/login`,
