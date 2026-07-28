@@ -13,37 +13,9 @@ import { Environment } from '@/shared/constants/environment';
 })
 export class PlayerComponent {
   public playerService = inject(PlayerService);
-  env = Environment
-
-  formatTime(seconds: number): string {
-    if (isNaN(seconds) || seconds < 0) return '0:00';
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-  }
+  env = Environment;
 
   togglePlayStatus() {
     this.playerService.togglePlayStatus();
   }
-
-  playNext() {
-    this.playerService.playNext();
-  }
-
-  playPrevious() {
-    this.playerService.playPrevious();
-  }
-
-  onSeek(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const value = parseFloat(input.value);
-    this.playerService.seek(value);
-  }
-
-  onVolumeChange(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const value = parseFloat(input.value);
-    this.playerService.setVolume(value);
-  }
 }
-
