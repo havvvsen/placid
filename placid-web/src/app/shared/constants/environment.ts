@@ -7,7 +7,7 @@ let prefix = `api/${apiVersion}`;
 export const Environment = {
   apiBaseUrl: 'http://placidus.duckdns.org',
   trackServerBaseUrl: 'http://placidus.duckdns.org/assets/tracks',
-  bannerServerBaseUrl: 'http://placidus.duckdns.org/assets/images',
+  bannerServerBaseUrl: 'http://placidus.duckdns.org/assets/banners',
   endpoints: {
     register: `${prefix}/register`,
     login: `${prefix}/login`,
