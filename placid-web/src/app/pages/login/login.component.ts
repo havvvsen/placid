@@ -1,23 +1,23 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import AuthService from '@/services/authservice';
 
-
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, FormsModule],
   selector: 'app-login-page',
   templateUrl: 'login.html',
 })
 export class LoginPageComponent {
   private router = inject(Router);
-  private authService = inject(AuthService)
+  private authService = inject(AuthService);
   email = '';
   password = '';
   isLoading = false;
+  hidePassword = true;
 
   onSubmit() {
     this.isLoading = true;
@@ -48,8 +48,7 @@ export class LoginPageComponent {
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
         alert(err.error.error);
-      }
-    })
-
+      },
+    });
   }
 }
