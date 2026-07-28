@@ -64,6 +64,6 @@ services:
       - 5001:5001
     depends_on:
       placid-api:
-        condition: service_ready
+        condition: service_started
 volumes:
   postgresql:
