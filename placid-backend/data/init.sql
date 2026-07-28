@@ -23,7 +23,6 @@ VALUES
 INSERT INTO tracks (name, mood, audio_url, bg_url)
 VALUES
     ('Gray noise', 'sleep', 'sleep/gray_noise.mp3', 'gray_noise.jpg'),
-    ('Silver drift', 'sleep', 'sleep/silver_drift.mp3', 'silver_drift.jpg'),
     ('Rain noise', 'sleep', 'sleep/rain_noise.mp3', 'rain_noise.jpg'),
     ('Rain on tent', 'sleep', 'sleep/rain_on_tent.mp3', 'rain_on_tent.jpg'),
     ('Stormy night', 'sleep', 'sleep/stormy_night.mp3', 'stormy_night.jpg');
