@@ -5,21 +5,22 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-navbar-component',
   templateUrl: 'navbar.html',
-  styleUrls: ["navbar.css"],
+  styleUrls: ['navbar.css'],
   imports: [RouterLink],
 })
 export class NavbarComponent {
-  authService = inject(AuthService)
-  isLoggedIn: boolean = false
+  authService = inject(AuthService);
+
+  isLoggedIn: boolean = false;
 
   constructor() {
-    let token = localStorage.getItem("token")
-    console.log(token)
+    let token = localStorage.getItem('token');
+    console.log(token);
 
-    if (token == "" || token == null || token == undefined) {
-      return
+    if (token == '' || token == null || token == undefined) {
+      return;
     }
 
-    this.isLoggedIn = true
+    this.isLoggedIn = true;
   }
 }
