@@ -28,4 +28,4 @@ jobs:
           context: .
           file: ./Dockerfile.prod
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/placid-web:latest
+          tags: ghcr.io/${{ github.repository_owner }}/placid-nginx:latest
