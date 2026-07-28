@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import AuthService from '@/services/authservice';
+import { LoadingService } from '@/services/loadingservice';
+import { NotificationService } from '@/services/notificationservice';
+import InvalidInputError from '@/shared/exceptions/invalid_input';
 
 @Component({
   standalone: true,
@@ -14,31 +17,39 @@ import AuthService from '@/services/authservice';
 export class RegisterPageComponent {
   private router = inject(Router);
   private authService = inject(AuthService);
+  loadingService = inject(LoadingService);
+  notificationService = inject(NotificationService);
   email = '';
   password = '';
-  isLoading = false;
   hidePassword = true;
 
   onSubmit() {
-    this.isLoading = true;
+    this.loadingService.isLoading.set(true);
 
     try {
       this.authService.sanitizeCredentials(this.email, this.password);
     } catch (e: any) {
-      alert(e);
+      this.loadingService.isLoading.set(false);
+
+      if (e instanceof InvalidInputError) {
+        this.notificationService.warning(e.message);
+
+        return;
+      }
+
+      this.notificationService.error(e);
       return;
     }
 
     this.authService.registerUser(this.email, this.password).subscribe({
       next: (res) => {
-        this.isLoading = false;
+        this.loadingService.isLoading.set(false);
         this.router.navigateByUrl('/login');
         alert(res.body?.message);
       },
       error: (err: HttpErrorResponse) => {
-        this.isLoading = false;
-        console.log(`Status: ${err.status} . Message: ${err.message} . Url: ${err.url}`);
-        alert(err.status);
+        this.loadingService.isLoading.set(false);
+        this.notificationService.error(err.message);
       },
     });
   }
