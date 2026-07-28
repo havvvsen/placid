@@ -1,12 +1,12 @@
 <app-navbar-component></app-navbar-component>
-<div class="flex flex-col items-center justify-center gap-10 min-h-screen  pb-32 pt-10">
+<div class="flex flex-col items-center justify-center gap-10 min-h-screen  pb-32 pt-10 mt-5">
   @if (isLoading) {
   <p class="text-white">Loading...</p>
   } @else {
     <!--FOCUS-->
   @if (trackList?.focus?.length) {
     <div class="flex flex-col gap-5 w-1/2">
-      <h4 class="text-4xl text-white font-semibold">Focus</h4>
+      <h4 class="text-3xl text-white font-semibold">Focus</h4>
       <div class="flex flex-col items-center justify-center gap-3">
         @for (track of trackList?.focus; track track?.id) {
         <app-track-card-component
@@ -26,7 +26,7 @@
     <!--RELAX-->
     @if (trackList?.relax?.length) {
     <div class="flex flex-col gap-5 w-1/2">
-      <h4 class="text-4xl text-white font-semibold">Relax</h4>
+      <h4 class="text-3xl text-white font-semibold">Relax</h4>
       <div class="flex flex-col items-center justify-center gap-3">
         @for (track of trackList?.relax; track track?.id) {
         <app-track-card-component
@@ -46,7 +46,7 @@
     <!--SLEEP-->
     @if (trackList?.sleep?.length) {
     <div class="flex flex-col gap-5 w-1/2">
-      <h4 class="text-4xl text-white font-semibold">Sleep</h4>
+      <h4 class="text-3xl text-white font-semibold">Sleep</h4>
       <div class="flex flex-col items-center justify-center gap-3">
         @for (track of trackList?.sleep; track track?.id) {
         <app-track-card-component
