@@ -8,8 +8,9 @@ import { TrackList } from '@/shared/models/tracklist';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Environment } from '@/shared/constants/environment';
 import { NavbarComponent } from '@/shared/components/navbar/navbar.component';
-import { Router } from '@angular/router';
 import TrackCardComponent from './components/trackcard/trackcard.component';
+import { LoadingService } from '@/services/loadingservice';
+import { NotificationService } from '@/services/notificationservice';
 
 @Component({
   standalone: true,
@@ -18,19 +19,23 @@ import TrackCardComponent from './components/trackcard/trackcard.component';
   templateUrl: 'home.html',
 })
 export class HomePageComponent {
-  private router = inject(Router);
   private trackService = inject(TrackService);
   public playerService = inject(PlayerService);
   private cdr = inject(ChangeDetectorRef);
+  loadingService = inject(LoadingService);
+  notificationService = inject(NotificationService);
   trackList: TrackList | null = null;
   defaultTrack: Track | undefined = undefined;
   isLoading = false;
   env = Environment;
 
   constructor() {
-    this.isLoading = true;
+    this.loadingService.isLoading.set(true);
+
     this.trackService.getTrackList().subscribe({
       next: (res: Track[]) => {
+        this.loadingService.isLoading.set(false);
+
         const focusTracks = res.filter((t) => t.mood === 'focus');
         const relaxTracks = res.filter((t) => t.mood === 'relax');
         const sleepTracks = res.filter((t) => t.mood === 'sleep');
@@ -43,12 +48,18 @@ export class HomePageComponent {
 
         this.defaultTrack = this.trackList.focus[0];
         this.playerService.setTrackList(res);
-        this.isLoading = false;
         this.cdr.detectChanges();
       },
       error: (err: HttpErrorResponse) => {
-        alert(err.error?.error || 'Error fetching tracks');
-        this.isLoading = false;
+        this.loadingService.isLoading.set(false);
+
+        if (err.error.error) {
+          this.notificationService.error(err.error.error);
+
+          return;
+        }
+
+        this.notificationService.error(`Could not complete request: Code ${err.status}`);
         this.cdr.detectChanges();
       },
     });
