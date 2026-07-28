@@ -1,4 +1,6 @@
+import { LoadingService } from '@/services/loadingservice';
 import NewsletterService from '@/services/newsletterservice';
+import { NotificationService } from '@/services/notificationservice';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -11,31 +13,38 @@ import { FormsModule } from '@angular/forms';
 })
 export class FooterNewsLetterComponent {
   http = inject(HttpClient);
-  newsletterService = inject(NewsletterService)
+  newsletterService = inject(NewsletterService);
+  loadingService = inject(LoadingService);
+  notificationService = inject(NotificationService);
   email = '';
-  isLoading = false;
 
   onSubmit() {
-    this.isLoading = true
+    this.loadingService.isLoading.set(true);
 
     if (!this.email.includes('@') || !this.email.includes('.') || this.email.length < 4) {
-      this.isLoading = false
+      this.loadingService.isLoading.set(false);
 
-      alert('Please provide a valid email');
+      this.notificationService.error('Please provide a valid email');
       return;
     }
     this.newsletterService.subscribeNewsletter(this.email).subscribe({
       next: (res) => {
-        this.isLoading = false;
+        this.loadingService.isLoading.set(false);
 
-        alert(res.body?.message);
+        if (res.body?.message) {
+          this.notificationService.success(res.body!.message);
+        }
       },
       error: (err: HttpErrorResponse) => {
-        this.isLoading = false;
-        alert(err.error.error);
-      }
-    })
+        this.loadingService.isLoading.set(false);
 
+        if (err.error.error) {
+          this.notificationService.error(err.error.error);
+          return;
+        }
+
+        this.notificationService.error(`Could not complete request: Code ${err.status}`);
+      },
+    });
   }
-
 }
