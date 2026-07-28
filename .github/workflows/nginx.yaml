@@ -1,4 +1,5 @@
-name: Build and Push Web
+# Creates new nginx container with most recent dist build
+name: Build and Push Nginx
 on:
   push:
     branches:
@@ -24,7 +25,7 @@ jobs:
       - name: Build Image
         uses: docker/build-push-action@v6
         with:
-          context: ./placid-web
-          file: ./placid-web/Dockerfile.prod
+          context: .
+          file: ./Dockerfile.prod
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/placid-web:latest
