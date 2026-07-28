@@ -1,5 +1,5 @@
 <app-navbar-component></app-navbar-component>
-<div class="flex flex-col items-center justify-center gap-10 min-h-screen bg-black pb-32 pt-10">
+<div class="flex flex-col items-center justify-center gap-10 min-h-screen  pb-32 pt-10">
   @if (isLoading) {
   <p class="text-white">Loading...</p>
   } @else {
@@ -9,13 +9,12 @@
       <h4 class="text-4xl text-white font-semibold">Focus</h4>
       <div class="flex flex-col items-center justify-center gap-3">
         @for (track of trackList?.focus; track track?.id) {
-        <div class="flex flex-row items-center justify-between w-full bg-black border border-gray-500 hover:border-orange-500 p-4 cursor-pointer transition-colors group rounded-md" (click)="play(track)">
-          <div class="flex items-center gap-4">
-            <img [src]="env.bannerServerBaseUrl +'/' +track?.bgUrl" alt="Track image" class="w-12 h-12 rounded object-cover" />
-            <p class="text-gray-200 text-2xl group-hover:text-orange-500 transition-colors">{{track?.name}}</p>
-          </div>
-          <img src="play.png" alt="Play icon" height="25" width="25" />
-        </div>
+        <app-track-card-component
+        [track] ="track"
+        [bannerServerBaseUrl]="env.bannerServerBaseUrl"
+        (play)="play($event)"
+        >
+        </app-track-card-component>
         }
       </div>
     </div>
@@ -30,13 +29,12 @@
       <h4 class="text-4xl text-white font-semibold">Relax</h4>
       <div class="flex flex-col items-center justify-center gap-3">
         @for (track of trackList?.relax; track track?.id) {
-        <div class="flex flex-row items-center justify-between w-full bg-black border border-gray-500 hover:border-orange-500 p-4 cursor-pointer transition-colors group rounded-md" (click)="play(track)">
-          <div class="flex items-center gap-4">
-            <img [src]="env.bannerServerBaseUrl + '/' + track?.bgUrl" alt="Track image" class="w-12 h-12 rounded object-cover" />
-            <p class="text-gray-200 text-2xl group-hover:text-orange-500 transition-colors">{{track?.name}}</p>
-          </div>
-          <img src="play.png" alt="Play icon" height="25" width="25" />
-        </div>
+        <app-track-card-component
+        [track] ="track"
+        [bannerServerBaseUrl]="env.bannerServerBaseUrl"
+        (play)="play($event)"
+        >
+        </app-track-card-component>
         }
       </div>
     </div>
@@ -51,13 +49,12 @@
       <h4 class="text-4xl text-white font-semibold">Sleep</h4>
       <div class="flex flex-col items-center justify-center gap-3">
         @for (track of trackList?.sleep; track track?.id) {
-        <div class="flex flex-row items-center justify-between w-full bg-black border border-gray-500 hover:border-orange-500 p-4 cursor-pointer transition-colors group rounded-md" (click)="play(track)">
-          <div class="flex items-center gap-4">
-            <img [src]="env. bannerServerBaseUrl + '/' + track?.bgUrl" alt="Track image" class="w-12 h-12 rounded object-cover" />
-            <p class="text-gray-200 text-2xl group-hover:text-orange-500 transition-colors">{{track?.name}}</p>
-          </div>
-          <img src="play.png" alt="Play icon" height="25" width="25" />
-        </div>
+        <app-track-card-component
+        [track] ="track"
+        [bannerServerBaseUrl]="env.bannerServerBaseUrl"
+        (play)="play($event)"
+        >
+        </app-track-card-component>
         }
       </div>
     </div>

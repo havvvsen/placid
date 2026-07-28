@@ -9,35 +9,36 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Environment } from '@/shared/constants/environment';
 import { NavbarComponent } from '@/shared/components/navbar/navbar.component';
 import { Router } from '@angular/router';
+import TrackCardComponent from './components/trackcard/trackcard.component';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, PlayerComponent, NavbarComponent],
+  imports: [CommonModule, PlayerComponent, NavbarComponent, TrackCardComponent],
   selector: 'app-home-page',
   templateUrl: 'home.html',
 })
 export class HomePageComponent {
-  private router = inject(Router)
+  private router = inject(Router);
   private trackService = inject(TrackService);
   public playerService = inject(PlayerService);
   private cdr = inject(ChangeDetectorRef);
   trackList: TrackList | null = null;
   defaultTrack: Track | undefined = undefined;
   isLoading = false;
-  env = Environment
+  env = Environment;
 
   constructor() {
     this.isLoading = true;
     this.trackService.getTrackList().subscribe({
       next: (res: Track[]) => {
-        const focusTracks = res.filter(t => t.mood === 'focus');
-        const relaxTracks = res.filter(t => t.mood === 'relax');
-        const sleepTracks = res.filter(t => t.mood === 'sleep');
+        const focusTracks = res.filter((t) => t.mood === 'focus');
+        const relaxTracks = res.filter((t) => t.mood === 'relax');
+        const sleepTracks = res.filter((t) => t.mood === 'sleep');
 
         this.trackList = {
           focus: focusTracks,
           relax: relaxTracks,
-          sleep: sleepTracks
+          sleep: sleepTracks,
         };
 
         this.defaultTrack = this.trackList.focus[0];
@@ -49,12 +50,11 @@ export class HomePageComponent {
         alert(err.error?.error || 'Error fetching tracks');
         this.isLoading = false;
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
   play(track: Track) {
     this.playerService.playTrack(track);
   }
-
 }
