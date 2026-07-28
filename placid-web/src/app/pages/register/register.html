@@ -1,27 +1,36 @@
 <div class="flex flex-col items-center justify-center mt-15">
   <h4 class="text-4xl text-gray-200 mb-5">Create an account</h4>
-  <p class="text-gray-500">With a Placid account, you can enjoy</p>
-  <p class="text-gray-500">peace across multiple devices</p>
+  <p class="text-gray-200/75">Join us today and experience a</p>
+  <p class="text-gray-200/75">new world !</p>
 
-  <form class="flex flex-col gap-2 mt-10" (ngSubmit)="onSubmit()">
+  <form class="flex flex-col gap-2 mt-7" (ngSubmit)="onSubmit()">
     <p class="text-gray-400">E-mail</p>
     <input
       name="email"
       type="text"
-      placeholder="hi@placid.io"
+      placeholder="me@gmail.com"
       [(ngModel)]="email"
       class="border border-gray-700 px-5 py-2 text-white"
     />
     <p class="text-gray-400">Password</p>
-    <input
-      name="password"
-      type="text"
-      placeholder="password"
-      [(ngModel)]="password"
-      class="border border-gray-700 px-5 py-2 text-white"
-    />
+    <div class="flex flex-row border border-gray-700 pr-4">
+      <input
+        name="password"
+        [type]="hidePassword ? 'password' : 'text'"
+        placeholder="password"
+        [(ngModel)]="password"
+        class="pl-5 pr-2 py-2 text-white"
+      />
+      <button type="button" (click)="hidePassword = !hidePassword">
+        @if (hidePassword) {
+          <img src="eye-open.png" alt="an open eye" height="20" width="20" />
+        } @else {
+          <img src="eye-closed.png" alt="a closed eye" height="20" width="20" />
+        }
+      </button>
+    </div>
     <button
-      class="border border-gray-700 bg-gray-700 px-10 py-2 rounded hover:bg-orange-600 hover:border-gray-200 hover:cursor-pointer hover:text-white mt-5 text-gray-200"
+      class="border border-gray-700 px-10 py-2 rounded bg-orange-600 hover:border-gray-200/75 hover:cursor-pointer hover:text-white mt-5 text-gray-200"
       type="submit"
     >
       Continue
@@ -30,7 +39,7 @@
 
   <div class="flex flex-row items-center gap-3 mt-5">
     <p class="text-gray-200 font-light text-sm">Already have an account ?</p>
-    <a href="/login" class="text-sm text-gray-100 hover:text-orange-600">Login</a>
+    <a href="/login" class="text-sm text-orange-500 hover:underline">Login</a>
   </div>
 
   <div class="flex flex-row gap-1 mt-5">
