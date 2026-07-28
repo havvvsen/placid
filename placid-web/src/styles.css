@@ -1,6 +1,10 @@
 @import 'tailwindcss';
 @plugin "tailwindcss-animate";
+@use '@angular/material' as mat;
 
+:root {
+  @include mat.snack-bar-overrides((button-color: orange; container-color: red;));
+}
 html {
   scroll-behavior: smooth;
 }
