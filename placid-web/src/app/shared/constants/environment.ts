@@ -1,13 +1,13 @@
-let apiVersion = "v1"
-let prefix = `api/${apiVersion}`
+let apiVersion = 'v1';
+let prefix = `api/${apiVersion}`;
 
-// apiBaseUrl: "http://placidus.duckdns.org:3000",
-// trackServerBaseUrl: "http://placidus.duckdns.org:3001/tracks",
-// bannerServerBaseUrl: "http://placidus.duckdns.org:3001/tracks/images",
+// apiBaseUrl: "http://localhost:3000",
+// trackServerBaseUrl: "http://localhost:3001/tracks",
+// bannerServerBaseUrl: "http://localhost:3001/tracks/images",
 export const Environment = {
-  apiBaseUrl: "http://localhost:3000",
-  trackServerBaseUrl: "http://localhost:3001/tracks",
-  bannerServerBaseUrl: "http://localhost:3001/tracks/images",
+  apiBaseUrl: 'http://placidus.duckdns.org:5000',
+  trackServerBaseUrl: 'http://placidus.duckdns.org:5001/assets/tracks',
+  bannerServerBaseUrl: 'http://placidus.duckdns.org:5001/assets/images',
   endpoints: {
     register: `${prefix}/register`,
     login: `${prefix}/login`,
@@ -18,6 +18,5 @@ export const Environment = {
     unSubscribeNewsletter: `${prefix}/unsubscribe-newsletter`,
     adminUploadTrack: `${prefix}/admin/upload-track`,
     adminDeleteTrack: `${prefix}/admin/delete-track`,
-  }
-}
-
+  },
+};
