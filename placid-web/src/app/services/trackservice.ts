@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Environment } from "../shared/constants/environment";
-import { TracksResponse } from '@/shared/models/response';
+import { Environment } from '../shared/constants/environment';
 import { Track } from '@/shared/models/track';
 import { Observable } from 'rxjs';
 
@@ -18,7 +17,8 @@ export class TrackService {
       headers = headers.set('Authorization', `Bearer ${token.trim()}`);
     }
 
-    return this.http.get<Track[]>(`${Environment.apiBaseUrl}/${Environment.endpoints.tracks}`, { headers });
+    return this.http.get<Track[]>(`${Environment.apiBaseUrl}/${Environment.endpoints.tracks}`, {
+      headers,
+    });
   }
 }
-
