@@ -6,7 +6,7 @@ FROM node:${NODE_VERSION} AS builder
 WORKDIR /app
 COPY ./placid-web/package.json ./
 RUN npm i
-COPY ./placid-web/* .
+COPY ./placid-web/ .
 RUN npm run build
 
 # Stage 2
