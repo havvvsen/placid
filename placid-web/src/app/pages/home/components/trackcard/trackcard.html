@@ -1,38 +1,16 @@
 <div
-  (click)="playTrack()"
-  class="flex flex-row items-center justify-between w-full p-4 rounded-xl bg-gray-800/60 hover:bg-gray-800 border border-gray-700/50 hover:border-orange-500/50 transition-all cursor-pointer group"
+  class="flex flex-row items-center justify-between w-full hover:bg-gray-800/70 p-4 cursor-pointer transition-colors group rounded-md"
+  (click)="onPlay()"
 >
-  <div class="flex items-center gap-3">
-    <div class="w-10 h-10 rounded-lg overflow-hidden bg-gray-900 flex-shrink-0 relative flex items-center justify-center">
-      @if (track?.bgUrl) {
-        <img [src]="track.bgUrl" [alt]="track.name" class="w-full h-full object-cover" />
-      } @else {
-        <span class="text-orange-400 font-bold text-lg">{{ track?.name?.charAt(0) || 'T' }}</span>
-      }
-    </div>
-    <div class="flex flex-col">
-      <span class="text-gray-100 font-medium text-lg group-hover:text-orange-400 transition-colors">{{ track?.name }}</span>
-      <span class="text-gray-400 text-xs capitalize">{{ track?.mood }}</span>
-    </div>
+  <div class="flex items-center gap-4">
+    <img
+      [src]="bannerServerBaseUrl + '/' + track?.bgUrl"
+      alt="Track image"
+      class="w-12 h-12 rounded object-cover"
+    />
+    <p class="text-gray-200 md:text-lg group-hover:text-orange-500 transition-colors">
+      {{ track?.name }}
+    </p>
   </div>
-
-  <button
-    type="button"
-    aria-label="Play track"
-    class="p-2 rounded-full bg-orange-500/10 group-hover:bg-orange-500 text-orange-400 group-hover:text-white transition-all flex items-center justify-center"
-  >
-    @if (isPlaying) {
-      <!-- Pause icon SVG -->
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <rect x="6" y="4" width="4" height="16" rx="1"></rect>
-        <rect x="14" y="4" width="4" height="16" rx="1"></rect>
-      </svg>
-    } @else {
-      <!-- Play icon SVG -->
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <polygon points="5,3 19,12 5,21"></polygon>
-      </svg>
-    }
-  </button>
+  <img src="play.png" alt="Play icon" height="16" width="16" />
 </div>
-

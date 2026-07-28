@@ -1,28 +1,22 @@
 import { Track } from '@/shared/models/track';
-import { Component, Input, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { PlayerService } from '@/services/playerservice';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'home-track-card-component',
+  selector: 'app-track-card-component',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: 'trackcard.html',
+  host: {
+    class: 'block w-full'
+  }
 })
 export class TrackCardComponent {
-  @Input() track!: Track;
-  public playerService = inject(PlayerService);
+  @Input({ required: true }) track!: Track;
+  @Input({ required: true }) bannerServerBaseUrl!: string;
+  @Output() play = new EventEmitter<Track>();
 
-  get isPlaying(): boolean {
-    return this.playerService.currentTrack()?.id === this.track?.id && this.playerService.isPlaying();
-  }
-
-  playTrack() {
-    if (this.track) {
-      this.playerService.playTrack(this.track);
-    }
+  onPlay() {
+    this.play.emit(this.track);
   }
 }
 
 export default TrackCardComponent;
-
