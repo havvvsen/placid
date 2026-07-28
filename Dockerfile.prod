@@ -4,9 +4,9 @@ ARG NGINX_VERSION=1.31-alpine
 # Build stage
 FROM node:${NODE_VERSION} AS builder
 WORKDIR /app
-COPY package.json ./
+COPY ./placid-web/package.json ./
 RUN npm i
-COPY . .
+COPY ./placid-web/* .
 RUN npm run build
 
 # Stage 2
