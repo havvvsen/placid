@@ -1,10 +1,13 @@
 let apiVersion = "v1"
 let prefix = `api/${apiVersion}`
 
+// apiBaseUrl: "http://placidus.duckdns.org:3000",
+// trackServerBaseUrl: "http://placidus.duckdns.org:3001/tracks",
+// bannerServerBaseUrl: "http://placidus.duckdns.org:3001/tracks/images",
 export const Environment = {
-  apiBaseUrl: "http://placidus.duckdns.org:3000",
-  trackServerBaseUrl: "http://placidus.duckdns.org:3001/tracks",
-  bannerServerBaseUrl: "http://placidus.duckdns.org:3001/tracks/images",
+  apiBaseUrl: "http://localhost:3000",
+  trackServerBaseUrl: "http://localhost:3001/tracks",
+  bannerServerBaseUrl: "http://localhost:3001/tracks/images",
   endpoints: {
     register: `${prefix}/register`,
     login: `${prefix}/login`,
