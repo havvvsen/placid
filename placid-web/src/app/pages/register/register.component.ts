@@ -45,7 +45,9 @@ export class RegisterPageComponent {
       next: (res) => {
         this.loadingService.isLoading.set(false);
         this.router.navigateByUrl('/login');
-        alert(res.body?.message);
+        if (res.body?.message) {
+          this.notificationService.info(res.body!.message);
+        }
       },
       error: (err: HttpErrorResponse) => {
         this.loadingService.isLoading.set(false);
