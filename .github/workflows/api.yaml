@@ -27,4 +27,4 @@ jobs:
           context: ./placid-backend
           file: ./placid-backend/Dockerfile.prod
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/placid-backend:latest
+          tags: ghcr.io/${{ github.repository_owner }}/placid-api:latest
