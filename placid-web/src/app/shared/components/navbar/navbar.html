@@ -1,6 +1,6 @@
-<nav class="flex flex-row justify-between items-center px-3 md:px-10 py-2 w-full">
+<nav class="flex flex-row justify-between items-center px-1 md:px-10 py-2 w-full">
   <div class="flex flex-row gap-3 items-center">
-    <img src="placid.png" alt="Logo of placid" width="50" height="50" class="rounded-3xl" />
+    <img src="placid.png" alt="Logo of placid" width="40" height="40" class="rounded-3xl" />
     @if (isLoggedIn) {
     <div class="hidden md:block border border-gray-500 py-1 px-3 items-center justify-center">
      <p class="text-gray-300/60 text-sm">FREEMIUM</p>
@@ -18,17 +18,14 @@
   <div class="flex flex-row gap-3 items-center">
     @if (!isLoggedIn) {
       <button
-        class="text-white bg-gray-700 pt-2 pb-2 pl-5 pr-5 rounded hover:cursor-pointer hover:bg-orange-600 border border-gray-600"
+        class="text-white bg-gray-700 py-1 px-2 mr-5 md:py-2 md:px-5 rounded hover:cursor-pointer hover:bg-orange-600 border border-gray-600"
         routerLink="/login"
       >
         Sign in
       </button>
         } @else {
-          <button (click) = "authService.logoutUser()" class="block md:hidden">
-            <img src="logout.png" alt="A logout button"  height=30 width=30 >
-          </button>
           <button
-            class="hidden md:block text-white bg-gray-700 pt-2 pb-2 pl-5 pr-5 rounded hover:cursor-pointer hover:bg-red-800 border border-gray-600"
+            class=" text-white bg-gray-700 px-2 py-1 md:py-2 md:px-5 mr-7 rounded hover:cursor-pointer hover:bg-red-800 border border-gray-600"
             (click) = "authService.logoutUser()"
           >
             Sign Out
