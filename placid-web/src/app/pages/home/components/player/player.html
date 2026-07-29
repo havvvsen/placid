@@ -1,12 +1,12 @@
 <div class="fixed bottom-6 -translate-x-1/2 w-[80%] md:w-[50%] lg:w-[30%] bg-gray-900 rounded-2xl p-4 border border-gray-600 z-50 flex flex-row items-center justify-between gap-4">
   <!-- Track details -->
-  <div class="flex items-center gap-3 w-full">
+  <div class="flex items-center gap-3 min-w-0 w-full">
     <div class="w-12 h-12 rounded-xl overflow-hidden bg-gray-800 border border-gray-700 shrink-0 flex items-center justify-center">
       @if (playerService.currentTrack()?.bgUrl) {
         <img [src]="env.bannerServerBaseUrl + '/' + playerService.currentTrack()?.bgUrl" [alt]="playerService.currentTrack()?.name" class="w-full h-full object-cover" />
       }
       </div>
-    <div class="flex flex-col ">
+    <div class="flex flex-col truncate min-w-0">
       <span class="text-white font-semibold text-base truncate">
         {{ playerService.currentTrack()?.name || 'Select a Soundscape' }}
       </span>
